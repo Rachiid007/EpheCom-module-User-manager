@@ -1,0 +1,23 @@
+{
+  "account1": {
+      "pseudo": "Chaos",
+      "password": "1234._@+a",
+      "last_name" : "Meunier",
+      "first_name" : "Arnaud",
+      "team": "2TM1"
+  },
+  "account2": {
+      "pseudo": "TonTon",
+      "password": "1234._@+a",
+      "last_name" : "Jean",
+      "first_name" : "Pierre",
+      "team": "2TM2"
+  },
+  "account3": {
+      "pseudo": "Tata",
+      "password": "1234._@+a",
+      "last_name": "Van",
+      "first_name": "Noé",
+      "team": "2TM3"
+  }
+}
