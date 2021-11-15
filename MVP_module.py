@@ -5,8 +5,9 @@ import re
 
 def argument():
     """cette fonction permet de gérer les arguments
-	Return: le dictionnaire des arguments
-	"""
+    
+    Return: le dictionnaire des arguments
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("pseudo", help="Pseudo du compte")
     parser.add_argument("password", help="Mot de passe du compte")
@@ -15,12 +16,12 @@ def argument():
 
 
 def valid_psd(password: str) -> str:
-	""" cette fonction vérifie si password respecte la norme 
-	Args: 
-		password(str) : mot de passe 
-	Return: 
-		password(str): le mot de passe , si il respecte la norme. Sinon, un message d'erreur
-	"""
+    """ cette fonction vérifie si password respecte la norme 
+    Args: 
+        password(str) : mot de passe 
+    Return: 
+        password(str): le mot de passe , si il respecte la norme. Sinon, un message d'erreur
+    """
     """PRE: prend en argument un mot de passe
        POST: renvoie le même mot de passe après vérification"""
     try:
@@ -33,12 +34,12 @@ def valid_psd(password: str) -> str:
 
 
 def print_account(account: dict) -> str:
-	"""Cette fonction renvoie les propriétés d'un utilisateur
-	Args: 
-		account(dict): compte d'utilisateur 
-	Return: 
-		les propriétés d'un utilisateur (str)
-	"""
+    """Cette fonction renvoie les propriétés d'un utilisateur
+    Args: 
+        account(dict): compte d'utilisateur 
+    Return: 
+        les propriétés d'un utilisateur (str)
+    """
     """PRE: prend en argument un dictionnaire d'un compte
        POST: renvoie une string avec toutes les informations du dictionnaire"""
     return (f"""
@@ -54,12 +55,12 @@ def print_account(account: dict) -> str:
 
 
 def open_file(path: str):
-	"""Cette fonction permet d'ouvrir un fichier
-	Args: 
-		path (str): le chemin du fichier 
-	Returns: 
-		le dictionnaire du fichier ou un message d'erreur si il n'existe pas 
-	"""
+    """Cette fonction permet d'ouvrir un fichier
+    Args: 
+        path (str): le chemin du fichier 
+    Returns: 
+        le dictionnaire du fichier ou un message d'erreur si il n'existe pas 
+    """
     """PRE: prend en argument une string avec le chemin d'accès vers le fichier des comptes
        POST: renvoie le fichier ouvert"""
     try:
@@ -71,29 +72,22 @@ def open_file(path: str):
 
 
 class WrongPasswordOrPseudo(Exception):
-
     pass
 
 
 class Gestion:
-	"""Une classe pour la gestion des utilisateurs.
-
+    """Une classe pour la gestion des utilisateurs.
     La class Profile contient toutes les informations à propos d'un utilisateur.
-
     Args:
         pseudo (str): Le nom d'utilisateur.
         password (str): Le mot de passe.
-        last_name (str): Le nom de famille.
-        first_name (str): Le prénom.
         team (str): l'équipe.
-
-
     Attributes:
         __pseudo (str): le nom d'utilisateur.
         __password (str): le mot de passe.
         __dict_accounts (dict): liste des utilisateurs.
-	"""
-	
+    """
+
     def __init__(self, pseudo: str, password: str, path: str):
         self.__pseudo = pseudo
         self.__password = password
@@ -101,31 +95,30 @@ class Gestion:
 
     @property
     def pseudo(self):
-	"""Cette fonction permet de renvoyer le pseudo d'un utilisateur
-	Returns: 
-		pseudo (str): le pseudo de l'utilisateur
-	"""
-        """PRE: un objet défini
-           POST: retourne une string de la valeur de l'attribut pseudo"""
+        """Cette fonction permet de renvoyer le pseudo d'un utilisateur
+        Returns: 
+            pseudo (str): le pseudo de l'utilisateur
+        PRE: un objet défini
+       POST: retourne une string de la valeur de l'attribut pseudo"""
         return self.__pseudo
 
     @property
     def password(self):
-	"""Cette fonction permet de renvoyer le mot de passe 
-	Returns: 
-		password (str): le mot de passe
-	"""
-        """PRE: un objet défini
-           POST: retourne une string de la valeur de l'attribut password"""
+        """Cette fonction permet de renvoyer le mot de passe 
+        Returns: 
+            password (str): le mot de passe
+        PRE: un objet défini
+        POST: retourne une string de la valeur de l'attribut password
+        """
         return self.__password
 
     def check_infos(self):
-	"""Cette fonction permet de valider le pseudo et le mot de passe
-	Returns:
-		les propriétés d'un utilisateur (str) ou une erreur si le pseudo ou le mot de passe est invalide
-	"""
-        """PRE: prend en argument un dictionnaire avec un pseudo, un password et un dictionnaire de comptes
-           POST: renvoie une string avec toutes les informations du compte du pseudo entré"""
+        """Cette fonction permet de valider le pseudo et le mot de passe
+        Returns:
+            les propriétés d'un utilisateur (str) ou une erreur si le pseudo ou le mot de passe est invalide
+        PRE: prend en argument un dictionnaire avec un pseudo, un password et un dictionnaire de comptes
+        POST: renvoie une string avec toutes les informations du compte du pseudo entré
+        """
         try:
             for account in self.__dict_accounts.values():
                 if account["pseudo"] == self.__pseudo and account["password"] == self.__password:
