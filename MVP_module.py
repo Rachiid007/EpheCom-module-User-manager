@@ -5,7 +5,7 @@ import re
 
 def argument():
     """cette fonction permet de gérer les arguments
-    
+
     Return: le dictionnaire des arguments
     """
     parser = argparse.ArgumentParser()
@@ -15,33 +15,29 @@ def argument():
     return parser.parse_args()
 
 
+class WrongPasswordOrPseudo(Exception):
+    pass
+
+
 def valid_psd(password: str) -> str:
-    """ cette fonction vérifie si password respecte la norme 
-    Args: 
-        password(str) : mot de passe 
-    Return: 
-        password(str): le mot de passe , si il respecte la norme. Sinon, un message d'erreur
+    """fait ça!
+
+    PRE: prend en argument un mot de passe
+    POST: Si le mot de passe est conforme, il est renvoyé.
+    RAISE: si MPD est faux!exception
     """
-    """PRE: prend en argument un mot de passe
-       POST: renvoie le même mot de passe après vérification"""
-    try:
-        if re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
-            return password
+
+    if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
         raise WrongPasswordOrPseudo("Le mot de passe ne respecte pas la norme")
-    except WrongPasswordOrPseudo as e:
-        print(e)
-        exit(-1)
+    return password
 
 
 def print_account(account: dict) -> str:
     """Cette fonction renvoie les propriétés d'un utilisateur
-    Args: 
-        account(dict): compte d'utilisateur 
-    Return: 
-        les propriétés d'un utilisateur (str)
+
+    PRE: prend en argument un dictionnaire d'un compte
+    POST: renvoie une string avec toutes les informations du dictionnaire (users)
     """
-    """PRE: prend en argument un dictionnaire d'un compte
-       POST: renvoie une string avec toutes les informations du dictionnaire"""
     return (f"""
     Bonjour {account["pseudo"]}, voici toutes les informations qu'on a à votre sujet :
         ===========================
@@ -55,14 +51,14 @@ def print_account(account: dict) -> str:
 
 
 def open_file(path: str):
-    """Cette fonction permet d'ouvrir un fichier
-    Args: 
-        path (str): le chemin du fichier 
-    Returns: 
-        le dictionnaire du fichier ou un message d'erreur si il n'existe pas 
+    """Cette fonction permet d'ouvrir un fichier.
+
+    PRE: path (str): le chemin du fichier
+    POST: le dictionnaire du fichier ou un message d'erreur si il n'existe pas
     """
     """PRE: prend en argument une string avec le chemin d'accès vers le fichier des comptes
-       POST: renvoie le fichier ouvert"""
+       POST: renvoie le fichier ouvert
+    """
     try:
         return open(path)
 
@@ -71,11 +67,7 @@ def open_file(path: str):
         exit(-1)
 
 
-class WrongPasswordOrPseudo(Exception):
-    pass
-
-
-class Gestion:
+class Utilisateur:
     """Une classe pour la gestion des utilisateurs.
     La class Profile contient toutes les informations à propos d'un utilisateur.
     Args:
@@ -96,7 +88,7 @@ class Gestion:
     @property
     def pseudo(self):
         """Cette fonction permet de renvoyer le pseudo d'un utilisateur
-        Returns: 
+        Returns:
             pseudo (str): le pseudo de l'utilisateur
         PRE: un objet défini
        POST: retourne une string de la valeur de l'attribut pseudo"""
@@ -104,8 +96,8 @@ class Gestion:
 
     @property
     def password(self):
-        """Cette fonction permet de renvoyer le mot de passe 
-        Returns: 
+        """Cette fonction permet de renvoyer le mot de passe
+        Returns:
             password (str): le mot de passe
         PRE: un objet défini
         POST: retourne une string de la valeur de l'attribut password
@@ -119,17 +111,17 @@ class Gestion:
         PRE: prend en argument un dictionnaire avec un pseudo, un password et un dictionnaire de comptes
         POST: renvoie une string avec toutes les informations du compte du pseudo entré
         """
-        try:
-            for account in self.__dict_accounts.values():
-                if account["pseudo"] == self.__pseudo and account["password"] == self.__password:
-                    return print_account(account)
+        for account in self.__dict_accounts.values():
+            if account["pseudo"] == self.__pseudo and account["password"] == self.__password:
+                return print_account(account)
 
-            raise WrongPasswordOrPseudo("Le mot de passe ou le pseudo est incorrecte ")
-        except WrongPasswordOrPseudo as e:
-            print(e)
+        raise WrongPasswordOrPseudo("Le mot de passe ou le pseudo est incorrecte ")
 
 
 if __name__ == '__main__':
     args = argument()
-    x = Gestion(args.pseudo, valid_psd(args.password), args.path)
-    print(x.check_infos())
+    try:
+        x = Utilisateur(args.pseudo, valid_psd(args.password), args.path)
+        print(x.check_infos())
+    except WrongPasswordOrPseudo as e:
+        print(e)
