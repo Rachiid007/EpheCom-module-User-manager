@@ -1,0 +1,41 @@
+MDScreen:
+    md_bg_color: [148/255,136/255,251/255, 1]
+
+    MDCard:
+        md_bg_color: [118/255,106/255,221/255, 1]
+        size_hint: None, None
+        size: 400, 500
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        spacing: 25
+        padding: 20
+        orientation: "vertical"
+        elevation: 15
+
+        MDLabel:
+            id: login_text
+            text: "Login"
+            color: [1,1,1,1]
+            font_size: 50
+            halign: "center"
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 25
+
+        MDTextFieldRound:
+            id: pseudo
+            hint_text: "pseudo"
+            icon_right: "account"
+            size_hint_x: None
+            width: 200
+            font_size: 25
+            pos_hint: {"center_x": 0.5}
+
+        MDTextFieldRound:
+            id: password
+            hint_text: "password"
+            icon_right: "eye-off"
+            color: [1,1,1,1]
+            size_hint_x: None
+            width: 200
+            font_size: 25
+            pos_hint: {"center_x": 0.5}
