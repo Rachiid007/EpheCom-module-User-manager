@@ -11,7 +11,13 @@ class Login(MDApp):
         pseudo = self.root.ids.pseudo.text
         password = self.root.ids.password.text
         if pseudo == "" or password == "":
-            Snackbar(text="Invalid pseudo or password").open()
+            Snackbar(
+                text="[color=#ffffff]Invalid pseudo or password ! [/color]",
+                font_size="20dp",
+                bg_color=[118/255, 106/255, 221/255, 1],
+                snackbar_animation_dir="Top"
+
+            ).open()
             return
         print(pseudo, password)
         # Reset field

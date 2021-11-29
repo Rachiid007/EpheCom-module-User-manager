@@ -29,17 +29,22 @@ MDScreen:
             width: 200
             font_size: 25
             pos_hint: {"center_x": 0.5}
+            normal_color:[140/255, 255/255, 255/255, 0.7]
+            color_active: [140/255, 255/255, 255/255, 0.7]
 
         MDTextFieldRound:
             id: password
             hint_text: "password"
             icon_right: "eye-off"
             password: True
+            allow_copy: False
             color: [1,1,1,1]
             size_hint_x: None
             width: 200
             font_size: 25
             pos_hint: {"center_x": 0.5}
+            normal_color:[140/255, 255/255, 255/255, 0.7]
+            color_active: [140/255, 255/255, 255/255, 0.7]
 
         MDRoundFlatButton:
             id: sign_up
