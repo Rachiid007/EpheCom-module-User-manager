@@ -24,5 +24,7 @@ class Login(MDApp):
         self.root.ids.pseudo.text = ""
         self.root.ids.password.text = ""
 
+        # Appel de la fonction de traitement ici
+
 
 Login().run()
