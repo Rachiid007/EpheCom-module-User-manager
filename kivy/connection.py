@@ -12,7 +12,7 @@ class Connection(MDApp):
         password = self.root.ids.l_password.text
         if pseudo == "" or password == "":
             Snackbar(
-                text="[color=#ffffff]Invalid pseudo or password ! [/color]",
+                text="[color=#ffffff]All field must be completed ! [/color]",
                 font_size="20dp",
                 bg_color=[118/255, 106/255, 221/255, 1],
                 snackbar_animation_dir="Top"
