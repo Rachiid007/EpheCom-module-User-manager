@@ -1,6 +1,8 @@
-from kivymd.app import MDApp
 from kivy.lang import Builder
+from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
+
+from verifications import *
 
 
 class Connection(MDApp):
@@ -19,12 +21,13 @@ class Connection(MDApp):
 
             ).open()
             return
-        print(pseudo, password)
+        # print(pseudo, password)
         # Reset field
         self.root.ids.l_pseudo.text = ""
         self.root.ids.l_password.text = ""
 
         # Appel de la fonction de traitement ici
+        user_in_bdd(pseudo, password)  # return True si les data corresponde a ce qu'il ya dans la DB !
 
     def register(self):
         pseudo = self.root.ids.r_pseudo.text
