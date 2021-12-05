@@ -6,6 +6,9 @@ class UnknownMode(Exception):
 
 
 def register():
+    """
+    Gestion du register sur l'interface en ligne de commande
+    """
     email = input("What's your email ?")
     pseudo = input("What's your pseudo ?")
     password = input("What's your password ?")
@@ -15,6 +18,9 @@ def register():
 
 
 def login():
+    """
+    Gestion du login sur l'interface en ligne de commande
+    """
     pseudo = input("What's your pseudo ?")
     password = input("What's your password ?")
     if not user_in_bdd(pseudo, password):
@@ -22,6 +28,9 @@ def login():
 
 
 def ilc_launcher():
+    """
+    Lance l'interface en ligne de commande + demande si login/register
+    """
     mode = input("Do you want to login or register ?")
     if mode == "register":
         register()

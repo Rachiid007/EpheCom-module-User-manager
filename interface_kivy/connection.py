@@ -7,11 +7,19 @@ from verifications import *
 
 class Connection(MDApp):
     def build(self):
+        """
+        Construit l'application sur base du modèle codé sur connection.kv
+        """
         return Builder.load_file("connection.kv")
 
     def login(self):
+        """
+        Traitement du login sur l'application
+        """
         pseudo = self.root.ids.l_pseudo.text
         password = self.root.ids.l_password.text
+
+        # Gestion champs vide
         if pseudo == "" or password == "":
             Snackbar(
                 text="[color=#ffffff]All field must be completed ! [/color]",
@@ -25,7 +33,7 @@ class Connection(MDApp):
         self.root.ids.l_pseudo.text = ""
         self.root.ids.l_password.text = ""
 
-        # Traitement du login
+        # Lancement du login avec db
         if not user_in_bdd(pseudo, password):
             Snackbar(
                 text="[color=#ffffff]Pseudo or password incorrect ! [/color]",
@@ -39,11 +47,15 @@ class Connection(MDApp):
         # Stop connection app and launch main app
 
     def register(self):
+        """
+        Traitement du register sur l'application
+        """
         pseudo = self.root.ids.r_pseudo.text
         password = self.root.ids.r_password.text
         password_confirm = self.root.ids.r_password_confirm.text
         email = self.root.ids.r_email.text
 
+        # Gestion champs vide
         if pseudo == "" or password == "" or password_confirm == "" or email == "":
             Snackbar(
                 text="[color=#ffffff]All field must be completed ! [/color]",
@@ -54,6 +66,7 @@ class Connection(MDApp):
             ).open()
             return
         print(pseudo, password, password_confirm, email)
+        #   Reset field
         self.root.ids.r_pseudo.text = ""
         self.root.ids.r_password.text = ""
         self.root.ids.r_password_confirm.text = ""
