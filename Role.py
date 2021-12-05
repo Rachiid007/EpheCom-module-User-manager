@@ -221,6 +221,7 @@ if __name__ == '__main__':
         rolemgt.update_role_indb(role1)
         print(role1)
         print(rolemgt.get_all_roles_fromdb())
+
     except Exception as e:
         print(e)
 
