@@ -21,13 +21,22 @@ class Connection(MDApp):
 
             ).open()
             return
-        # print(pseudo, password)
         # Reset field
         self.root.ids.l_pseudo.text = ""
         self.root.ids.l_password.text = ""
 
-        # Appel de la fonction de traitement ici
-        user_in_bdd(pseudo, password)  # return True si les data corresponde a ce qu'il ya dans la DB !
+        # Traitement du login
+        if not user_in_bdd(pseudo, password):
+            Snackbar(
+                text="[color=#ffffff]Pseudo or password incorrect ! [/color]",
+                font_size="20dp",
+                bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
+                snackbar_animation_dir="Top"
+
+            ).open()
+            return
+        print("OK launch main app")
+        # Stop connection app and launch main app
 
     def register(self):
         pseudo = self.root.ids.r_pseudo.text

@@ -9,7 +9,7 @@ def register():
     email = input("What's your email ?")
     pseudo = input("What's your pseudo ?")
     password = input("What's your password ?")
-    confirm_password = input("Confirm password ?")
+    confirm_password = input("Confirm password")
 
     # Function for register
 
@@ -17,7 +17,8 @@ def register():
 def login():
     pseudo = input("What's your pseudo ?")
     password = input("What's your password ?")
-    user_in_bdd(pseudo, password)
+    if not user_in_bdd(pseudo, password):
+        exit(0)
 
 
 def ilc_launcher():
