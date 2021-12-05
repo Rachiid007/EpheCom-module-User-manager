@@ -20,7 +20,7 @@ def login():
     user_in_bdd(pseudo, password)
 
 
-def log_or_register():
+def ilc_launcher():
     mode = input("Do you want to login or register ?")
     if mode == "register":
         register()
@@ -29,6 +29,3 @@ def log_or_register():
     else:
         raise UnknownMode("Mode known: login or register")
 
-
-if __name__ == "__main__":
-    log_or_register()

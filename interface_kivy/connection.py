@@ -16,7 +16,7 @@ class Connection(MDApp):
             Snackbar(
                 text="[color=#ffffff]All field must be completed ! [/color]",
                 font_size="20dp",
-                bg_color=[118/255, 106/255, 221/255, 1],
+                bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
                 snackbar_animation_dir="Top"
 
             ).open()
@@ -39,7 +39,7 @@ class Connection(MDApp):
             Snackbar(
                 text="[color=#ffffff]All field must be completed ! [/color]",
                 font_size="20dp",
-                bg_color=[118/255, 106/255, 221/255, 1],
+                bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
                 snackbar_animation_dir="Top"
 
             ).open()
@@ -51,6 +51,3 @@ class Connection(MDApp):
         self.root.ids.r_email.text = ""
 
         # Appel de la fonction de traitement ici
-
-
-Connection().run()
