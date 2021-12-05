@@ -1,3 +1,5 @@
+import re
+
 from pymongo import MongoClient
 
 
@@ -21,25 +23,12 @@ def list_users():
 
     collection = connector.db["users"]
 
-    for x in collection.find():
-        print(x)
-
-
-def user_in_bdd(user_name, password):
-    connector = MongoConnector()
-
-    collection = connector.db["users"]
-
-    query_all = {"user_name": user_name, "password": password}
-    if collection.count_documents(query_all):
-        return True
-    else:
-        return False
+    return [print(x) for x in collection.find()]
 
 
 class Users(MongoConnector):
 
-    def __init__(self, user_name, email, password, first_name="", last_name="", q_securite="", ans_securite=""):
+    def __init__(self, user_name, email, password, first_name="", last_name="", age=13, q_securite="", ans_securite=""):
         super().__init__()
 
         self.user_name = user_name
@@ -47,6 +36,7 @@ class Users(MongoConnector):
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
+        self.age = age
         self.q_securite = q_securite
         self.ans_securite = ans_securite
 
@@ -61,6 +51,7 @@ class Users(MongoConnector):
             "password": self.password,
             "first_name": self.first_name,
             "last_name": self.last_name,
+            "age": self.age,
             "q_securite": self.q_securite,
             "ans_securite": self.ans_securite,
             "list_role": [22, 25, 50]
@@ -72,6 +63,16 @@ class Users(MongoConnector):
         :return: True si le user_name courant existe dans la BDD et sinon False.
         """
         query = {"user_name": self.user_name}
+        if self.db["users"].count_documents(query):
+            return True
+        else:
+            return False
+
+    def is_exist_email(self):
+        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
+        :return: True si le user_name courant existe dans la BDD et sinon False.
+        """
+        query = {"email": self.email}
         if self.db["users"].count_documents(query):
             return True
         else:
@@ -98,6 +99,7 @@ class Users(MongoConnector):
             "first_name": new_first_name,
             "last_name": new_last_name,
             "password": new_password,
+            "age": self.age,
             "q_securite": new_q_securite,
             "ans_securite": new_ans_securite
         }}
@@ -123,15 +125,47 @@ class Users(MongoConnector):
         else:
             return res
 
+    def is_user_in_bdd(self):
+        query = {"user_name": self.user_name, "password": self.password}
+        res = self.db["users"].find_one(query)
+        if res is None:
+            return False, "L'utilisateur n'existe pas ou MDP erroné !"
+        else:
+            return True, res
+
+
+def register_verify(user_name, email, password, confirm_password, age):
+    if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
+        return False, "Le MDP ne respect pas la norme !"
+
+    if password != confirm_password:
+        return False, "Les 2 MDP ne correspondent pas !"
+
+    if age < 13:
+        return False, "Vous devez avoir minimum 13 ans !"
+
+    user_test = Users(user_name, email, password)
+
+    if not user_test.is_exist_user_name():
+        return False, "Le nom d'utilisateur existe déjà !"
+
+    if not user_test.is_exist_email():
+        return False, "L'adresse email existe déjà !"
+
+    user_test.create()
+    return True
+
 
 if __name__ == '__main__':
 
     try:
-        user1 = Users(user_name="Rachiid007", password="rachid1234", email="rachid@gmail.com")
+        user1 = Users(user_name="Rachiid07", password="rachid1234", email="rachid@gmail.com")
         # user1.create()
-
         # print(user_in_bdd("Abderrachid", "rachid1234"))
-        list_users()
+
+        print(user1.is_user_in_bdd())
+
+        # list_users()
         # print(user1.is_exist_user_name())
 
     except Exception as e:

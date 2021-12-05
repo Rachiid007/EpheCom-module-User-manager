@@ -2,7 +2,7 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
 
-from verifications import *
+from Users import *
 
 
 class Connection(MDApp):
@@ -34,7 +34,11 @@ class Connection(MDApp):
         self.root.ids.l_password.text = ""
 
         # Lancement du login avec db
-        if not user_in_bdd(pseudo, password):
+        users_test = Users(user_name=pseudo, email="", password=password)
+        users_test.is_user_in_bdd()
+
+        # si il est en BDD -> True, {dict avec info de l'User}
+
             Snackbar(
                 text="[color=#ffffff]Pseudo or password incorrect ! [/color]",
                 font_size="20dp",
@@ -54,6 +58,7 @@ class Connection(MDApp):
         password = self.root.ids.r_password.text
         password_confirm = self.root.ids.r_password_confirm.text
         email = self.root.ids.r_email.text
+        age = 22
 
         # Gestion champs vide
         if pseudo == "" or password == "" or password_confirm == "" or email == "":
@@ -73,3 +78,4 @@ class Connection(MDApp):
         self.root.ids.r_email.text = ""
 
         # Appel de la fonction de traitement ici
+        register_verify(pseudo, email, password, password_confirm, age)  # RAJOUTER le champ AGE !!!!
