@@ -1,3 +1,10 @@
+from interface_kivy.verifications import *
+
+
+class UnknownMode(Exception):
+    pass
+
+
 def register():
     email = input("What's your email ?")
     pseudo = input("What's your pseudo ?")
@@ -10,15 +17,18 @@ def register():
 def login():
     pseudo = input("What's your pseudo ?")
     password = input("What's your password ?")
-
-    # Function for login
+    user_in_bdd(pseudo, password)
 
 
 def log_or_register():
-    if input("Do you want to login or register ?") == "register":
+    mode = input("Do you want to login or register ?")
+    if mode == "register":
         register()
-    login()
+    elif mode == "login":
+        login()
+    else:
+        raise UnknownMode("Mode known: login or register")
 
 
-if __name__ == " __main__":
+if __name__ == "__main__":
     log_or_register()
