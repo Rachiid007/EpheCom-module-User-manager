@@ -1,4 +1,4 @@
-from mongoConnector import MongoConnector
+from Users import MongoConnector
 
 
 class AlreadyExistException(Exception):

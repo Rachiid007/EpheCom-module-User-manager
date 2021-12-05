@@ -35,9 +35,10 @@ class Connection(MDApp):
 
         # Lancement du login avec db
         users_test = Users(user_name=pseudo, email="", password=password)
-        users_test.is_user_in_bdd()
+        il_est_dans_la_db = users_test.is_user_in_bdd()[0]
 
-        # si il est en BDD -> True, {dict avec info de l'User}
+        if il_est_dans_la_db:
+            # si il est en BDD -> True, {dict avec info de l'User}
 
             Snackbar(
                 text="[color=#ffffff]Pseudo or password incorrect ! [/color]",

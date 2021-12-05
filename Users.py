@@ -125,7 +125,7 @@ class Users(MongoConnector):
         else:
             return res
 
-    def is_user_in_bdd(self):
+    def is_user_in_bdd(self) :
         query = {"user_name": self.user_name, "password": self.password}
         res = self.db["users"].find_one(query)
         if res is None:
@@ -159,11 +159,13 @@ def register_verify(user_name, email, password, confirm_password, age):
 if __name__ == '__main__':
 
     try:
-        user1 = Users(user_name="Rachiid07", password="rachid1234", email="rachid@gmail.com")
+        user1 = Users(user_name="Rachiid007", password="rachid1234", email="rachid@gmail.com")
         # user1.create()
         # print(user_in_bdd("Abderrachid", "rachid1234"))
 
-        print(user1.is_user_in_bdd())
+        # print(user1.is_user_in_bdd())
+        il_est_dans_la_db = user1.is_user_in_bdd()[0]
+        print(il_est_dans_la_db)
 
         # list_users()
         # print(user1.is_exist_user_name())
