@@ -1,9 +1,10 @@
-from connection import *
-from interface_ligne_commande.connection import *
-
 if __name__ == "__main__":
+
     ilc = input("Launching command line interface ? [y/n])")
     if ilc == "y":
+        from interface_ligne_commande.connection import *
         ilc_launcher()
+
     else:
+        from connection import *
         Connection().run()
