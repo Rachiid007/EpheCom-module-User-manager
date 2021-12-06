@@ -35,9 +35,9 @@ class Connection(MDApp):
 
         # Lancement du login avec db
         users_test = Users(user_name=pseudo, email="", password=password)
-        il_est_dans_la_db = users_test.is_user_in_bdd()[0]
+        is_user_db = users_test.is_user_in_bdd()
 
-        if il_est_dans_la_db:
+        if not is_user_db[0]:
             # si il est en BDD -> True, {dict avec info de l'User}
 
             Snackbar(
@@ -48,7 +48,7 @@ class Connection(MDApp):
 
             ).open()
             return
-        print("OK launch main app")
+        print(is_user_db[1])
         # Stop connection app and launch main app
 
     def register(self):
