@@ -34,7 +34,7 @@ class Connection(MDApp):
         self.root.ids.l_password.text = ""
 
         # Lancement du login avec db
-        users_test = Users(user_name=pseudo, email="", password=password)
+        users_test = Users(user_name=pseudo, email="", password=password, age=13)
         is_user_db = users_test.is_user_in_bdd()
 
         if not is_user_db[0]:
@@ -59,7 +59,7 @@ class Connection(MDApp):
         password = self.root.ids.r_password.text
         password_confirm = self.root.ids.r_password_confirm.text
         email = self.root.ids.r_email.text
-        age = 22
+        age = self.root.ids.r_age.text
 
         # Gestion champs vide
         if pseudo == "" or password == "" or password_confirm == "" or email == "":
@@ -77,9 +77,20 @@ class Connection(MDApp):
         self.root.ids.r_password.text = ""
         self.root.ids.r_password_confirm.text = ""
         self.root.ids.r_email.text = ""
+        self.root.ids.r_age.text = ""
 
         # Appel de la fonction de traitement ici
-        register_verify(pseudo, email, password, password_confirm, age)  # RAJOUTER le champ AGE !!!!
+        verification = register_verify(pseudo, email, password, password_confirm, age)
+        if not verification[0]:
+            Snackbar(
+                text=f"[color=#ffffff]{verification[1]} ! [/color]",
+                font_size="20dp",
+                bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
+                snackbar_animation_dir="Top"
+
+            ).open()
+            return
+        print("Register done")
 
 
 Connection().run()

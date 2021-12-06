@@ -28,7 +28,7 @@ def list_users():
 
 class Users(MongoConnector):
 
-    def __init__(self, user_name, email, password, first_name="", last_name="", age=13, q_securite="", ans_securite=""):
+    def __init__(self, user_name, email, password, age, first_name="", last_name="", q_securite="", ans_securite=""):
         super().__init__()
 
         self.user_name = user_name
