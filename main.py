@@ -1,4 +1,4 @@
-from interface_kivy.connection import *
+from connection import *
 from interface_ligne_commande.connection import *
 
 if __name__ == "__main__":

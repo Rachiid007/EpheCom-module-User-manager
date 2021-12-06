@@ -80,3 +80,6 @@ class Connection(MDApp):
 
         # Appel de la fonction de traitement ici
         register_verify(pseudo, email, password, password_confirm, age)  # RAJOUTER le champ AGE !!!!
+
+
+Connection().run()
