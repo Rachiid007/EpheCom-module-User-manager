@@ -1,35 +1,9 @@
 import re
-
-from pymongo import MongoClient
-
-
-class MongoConnector:
-
-    def __init__(self):
-        certificat_path = "2TM1-G2.pem"
-        uri = "mongodb+srv://cluster0.5i6qo.gcp.mongodb.net/ephecom?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority&ssl_cert_reqs=CERT_NONE"
-        client = MongoClient(uri, tls=True, tlsCertificateKeyFile=certificat_path)
-        self.db = client['ephecom']
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self):
-        self.db.close()
+from connexion_bdd import MongoConnector
 
 
-def list_users():
-    connector = MongoConnector()
-
-    collection = connector.db["users"]
-
-    return [print(x) for x in collection.find()]
-
-
-class Users(MongoConnector):
-
+class Users:
     def __init__(self, user_name, email, password, age, first_name="", last_name="", q_securite="", ans_securite=""):
-        super().__init__()
 
         self.user_name = user_name
         self.email = email
@@ -40,9 +14,15 @@ class Users(MongoConnector):
         self.q_securite = q_securite
         self.ans_securite = ans_securite
 
+        try:
+            with MongoConnector() as connector:
+                self.__collection = connector.db["users"]
+
+        except Exception as error:
+            print(error)
+
     def create(self):
         """ Ajoute l'utilisateur dans la BDD.
-
         :return:
         """
         query = {
@@ -56,40 +36,10 @@ class Users(MongoConnector):
             "ans_securite": self.ans_securite,
             "list_role": [22, 25, 50]
         }
-        self.db["users"].insert_one(query)
-
-    def is_exist_user_name(self):
-        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
-        :return: True si le user_name courant existe dans la BDD et sinon False.
-        """
-        query = {"user_name": self.user_name}
-        if self.db["users"].count_documents(query):
-            return True
-        else:
-            return False
-
-    def is_exist_email(self):
-        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
-        :return: True si le user_name courant existe dans la BDD et sinon False.
-        """
-        query = {"email": self.email}
-        if self.db["users"].count_documents(query):
-            return True
-        else:
-            return False
+        self.__collection.insert_one(query)
 
     def update(self, new_user_name, new_email, new_first_name, new_last_name, new_password, new_q_securite,
                new_ans_securite):
-        """ Modifie les données de l'utilisateur qui sont dans la BDD.
-        :param new_user_name:
-        :param new_email:
-        :param new_first_name:
-        :param new_last_name:
-        :param new_password:
-        :param new_q_securite:
-        :param new_ans_securite:
-        :return:
-        """
 
         query = {"user_name": self.user_name}
 
@@ -102,7 +52,7 @@ class Users(MongoConnector):
             "q_securite": new_q_securite,
             "ans_securite": new_ans_securite
         }}
-        self.db["users"].update_one(query, new_values)
+        self.__collection.update_one(query, new_values)
 
     def delete(self):
         """
@@ -110,7 +60,7 @@ class Users(MongoConnector):
         :return:
         """
         query = {"user_name": self.user_name}
-        self.db["users"].delete_one(query)
+        self.__collection.delete_one(query)
 
     def has_role(self, id_role):
         """ Vérifie si l'Utilisateur dispose d'un rôle.
@@ -118,22 +68,42 @@ class Users(MongoConnector):
         :param id_role: l'ID du role qu'on souhaite
         :return: True si le rôle est dans la list et sinon False
         """
-        res = self.db["users"].find_one({"user_name": self.user_name, "list_role": id_role})
+        res = self.__collection.find_one({"user_name": self.user_name, "list_role": id_role})
         if res is None:
             return False
         else:
             return res
 
-    def is_user_in_bdd(self) :
+    def is_exist_user_name(self):
+        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
+        :return: True si le user_name courant existe dans la BDD et sinon False.
+        """
+        query = {"user_name": self.user_name}
+        if self.__collection.count_documents(query):
+            return True
+        else:
+            return False
+
+    def is_exist_email(self):
+        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
+        :return: True si le user_name courant existe dans la BDD et sinon False.
+        """
+        query = {"email": self.email}
+        if self.__collection.count_documents(query):
+            return True
+        else:
+            return False
+
+    def is_user_in_bdd(self):
         query = {"user_name": self.user_name, "password": self.password}
-        res = self.db["users"].find_one(query)
+        res = self.__collection.find_one(query)
         if res is None:
             return False, "L'utilisateur n'existe pas ou MDP erroné !"
         else:
             return True, res
 
 
-def register_verify(user_name, email, password, confirm_password, age):
+def register_verify(user_name, email, age, password, confirm_password):
     if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
         return False, "Le MDP ne respect pas la norme !"
 
@@ -143,7 +113,7 @@ def register_verify(user_name, email, password, confirm_password, age):
     if age < 13:
         return False, "Vous devez avoir minimum 13 ans !"
 
-    user_test = Users(user_name, email, password)
+    user_test = Users(user_name, email, password, age)
 
     if not user_test.is_exist_user_name():
         return False, "Le nom d'utilisateur existe déjà !"
@@ -155,19 +125,21 @@ def register_verify(user_name, email, password, confirm_password, age):
     return True
 
 
+def login_verify(user_name, password):
+    user_test = Users(user_name=user_name, email="", password=password, age="")
+    return user_test.is_user_in_bdd()
+
+
 if __name__ == '__main__':
+    user1 = Users(user_name="Rachiid007", password="rachid1234", email="rachid@gmail.com", age="")
+    # user1.create()
+    print(user1.is_user_in_bdd())
 
-    try:
-        user1 = Users(user_name="Rachiid007", password="rachid1234", email="rachid@gmail.com")
-        # user1.create()
-        # print(user_in_bdd("Abderrachid", "rachid1234"))
+    # print(user1.is_user_in_bdd())
+    # il_est_dans_la_db = user1.is_user_in_bdd()[0]
+    # print(il_est_dans_la_db)
 
-        # print(user1.is_user_in_bdd())
-        il_est_dans_la_db = user1.is_user_in_bdd()[0]
-        print(il_est_dans_la_db)
+    # list_users()
+    # print(user1.is_exist_user_name())
 
-        # list_users()
-        # print(user1.is_exist_user_name())
-
-    except Exception as e:
-        print(e)
+    pass

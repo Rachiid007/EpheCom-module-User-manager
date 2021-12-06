@@ -1,4 +1,4 @@
-from Users import MongoConnector
+from connexion_bdd import MongoConnector
 
 
 class AlreadyExistException(Exception):
