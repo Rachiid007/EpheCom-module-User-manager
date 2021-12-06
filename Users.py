@@ -99,7 +99,6 @@ class Users(MongoConnector):
             "first_name": new_first_name,
             "last_name": new_last_name,
             "password": new_password,
-            "age": self.age,
             "q_securite": new_q_securite,
             "ans_securite": new_ans_securite
         }}

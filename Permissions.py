@@ -1,9 +1,6 @@
-# This is a sample Python script.
-
-# Press Maj+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import argparse
-import pymongo
+from Users import MongoConnector
+
 
 def argument():
     """Functions that manage all the arguments' script"""
@@ -12,9 +9,10 @@ def argument():
     args = parser.parse_args()
     return args.arguments
 
-class permission:
 
+class Permissions(MongoConnector):
     def __init__(self, id_p, name, description):
+        super().__init__()
 
         self.__id_p = id_p
         self.__name = name
@@ -32,8 +30,8 @@ class permission:
     def description(self):
         return self.__description
 
-    #@name.setter
-    def name(self, new_name):
+    # @name.setter
+    def changer_nom(self, new_name):
         """
         recup chaine de carac (pseudo) et chaine (new name) remplace
         PRE :
@@ -45,20 +43,18 @@ class permission:
             "name": new_name
         }}
 
-        self.db["users"].update_one(query, new_values)
+        self.db["permissions"].update_one(query, new_values)
 
-    #@description.setter
-    def description(self, new_desc):
+    # @description.setter
+    def changer_desc(self, new_desc):
         """
-
         PRE :
         POST :
         """
         query = {"description": self.__description}
-
         new_values = {"$set": {"description": new_desc}}
 
-        self.db["users"].update_one(query, new_values)
+        self.db["permissions"].update_one(query, new_values)
 
     def add_db_perm(self):
         """
@@ -67,10 +63,8 @@ class permission:
         PRE :
         POST :
         """
-        query = {"id_p": self.__id_p}
-
-        values = {"$set": {"id_p": self.__id_p, "name": self.__name, "description": self.__description}}
-        self.db["permission"].insert_one(query, values)
+        query = {{"id_p": self.__id_p, "name": self.__name, "description": self.__description}}
+        self.db["permissions"].insert_one(query)
 
     def remove_perm(self):
         """
@@ -79,22 +73,17 @@ class permission:
         POST :
         """
         query = {"id_p": self.__id_p}
-
-        values = {"$set": {"id_p": self.__id_p, "name": self.__name, "description": self.__description}}
-        self.db["permission"].delete_one(query, values)
-        pass
+        self.db["permission"].delete_one(query)
 
 
-    
 if __name__ == '__main__':
+    perm_test = Permissions(1080, "abdl", "perm de test")
+
     if argument()[0] == 'changer_nom':
-        permission.changer_nom(argument())
+        perm_test.changer_nom(argument())
     elif argument()[0] == 'changer_desc':
-        permission.changer_desc(argument())
+        perm_test.changer_desc(argument())
     elif argument()[0] == 'add_db_perm':
-        permission.add_db_perm()
+        perm_test.add_db_perm()
     elif argument()[0] == 'remove_perm':
-        permission.remove_perm()
-
-
-
+        perm_test.remove_perm()
