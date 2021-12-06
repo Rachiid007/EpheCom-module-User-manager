@@ -44,7 +44,7 @@ class Connection(MDApp):
             return snackbar_message("Pseudo or password incorrect !")
 
         print(is_user_db[1])
-        Connection().stop()
+        self.root.current = "profile"
 
     def register(self):
         """
@@ -74,6 +74,10 @@ class Connection(MDApp):
             return snackbar_message(verification[1])
 
         print("Register done")
+
+    def log_out(self):
+        self.root.current = "connection"
+        print("Success login out")
 
 
 Connection().run()
