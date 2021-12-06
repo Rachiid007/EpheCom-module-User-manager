@@ -1,8 +1,16 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
-
 from Users import *
+
+
+def snackbar_message(text: str) -> None:
+    Snackbar(
+        text=f"[color=#ffffff]{text} [/color]",
+        font_size="20dp",
+        bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
+        snackbar_animation_dir="Top"
+    ).open()
 
 
 class Connection(MDApp):
@@ -21,14 +29,8 @@ class Connection(MDApp):
 
         # Gestion champs vide
         if pseudo == "" or password == "":
-            Snackbar(
-                text="[color=#ffffff]All field must be completed ! [/color]",
-                font_size="20dp",
-                bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
-                snackbar_animation_dir="Top"
+            return snackbar_message("All field must be completed !")
 
-            ).open()
-            return
         # Reset field
         self.root.ids.l_pseudo.text = ""
         self.root.ids.l_password.text = ""
@@ -37,19 +39,12 @@ class Connection(MDApp):
         users_test = Users(user_name=pseudo, email="", password=password, age=13)
         is_user_db = users_test.is_user_in_bdd()
 
+        # Gestion données incorrecte
         if not is_user_db[0]:
-            # si il est en BDD -> True, {dict avec info de l'User}
+            return snackbar_message("Pseudo or password incorrect !")
 
-            Snackbar(
-                text="[color=#ffffff]Pseudo or password incorrect ! [/color]",
-                font_size="20dp",
-                bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
-                snackbar_animation_dir="Top"
-
-            ).open()
-            return
         print(is_user_db[1])
-        # Stop connection app and launch main app
+        Connection().stop()
 
     def register(self):
         """
@@ -63,14 +58,8 @@ class Connection(MDApp):
 
         # Gestion champs vide
         if pseudo == "" or password == "" or password_confirm == "" or email == "":
-            Snackbar(
-                text="[color=#ffffff]All field must be completed ! [/color]",
-                font_size="20dp",
-                bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
-                snackbar_animation_dir="Top"
+            return snackbar_message("All field must be completed !")
 
-            ).open()
-            return
         print(pseudo, password, password_confirm, email)
         #   Reset field
         self.root.ids.r_pseudo.text = ""
@@ -82,14 +71,8 @@ class Connection(MDApp):
         # Appel de la fonction de traitement ici
         verification = register_verify(pseudo, email, password, password_confirm, age)
         if not verification[0]:
-            Snackbar(
-                text=f"[color=#ffffff]{verification[1]} ! [/color]",
-                font_size="20dp",
-                bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
-                snackbar_animation_dir="Top"
+            return snackbar_message(verification[1])
 
-            ).open()
-            return
         print("Register done")
 
 
