@@ -45,6 +45,7 @@ class Connection(MDApp):
 
         print(is_user_db[1])
         self.root.current = "profile"
+        self.display_profile_data(is_user_db[1])
 
     def register(self):
         """
@@ -74,6 +75,15 @@ class Connection(MDApp):
             return snackbar_message(verification[1])
 
         print("Register done")
+
+    def display_profile_data(self, data: dict):
+        data_keys = data.keys()
+        data_string = f""
+        for keys in data_keys:
+            if keys == "_id":
+                continue
+            data_string += f"\n\n{keys} : {data[keys] if not data[keys]=='' else None}"
+        self.root.ids.p_display_data.text = data_string
 
     def log_out(self):
         self.root.current = "connection"
