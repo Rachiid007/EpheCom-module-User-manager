@@ -85,6 +85,19 @@ class Connection(MDApp):
             data_string += f"\n\n{keys} : {data[keys] if not data[keys]=='' else None}"
         self.root.ids.p_display_data.text = data_string
 
+    def update_profile(self):
+        pseudo = self.root.ids.ed_pseudo.text
+        email = self.root.ids.ed_email.text
+        password = self.root.ids.ed_password.text
+        confirm_password = self.root.ids.ed_password_confirm.text
+        first_name = self.root.ids.ed_first_name.text
+        last_name = self.root.ids.ed_last_name.text
+        age = self.root.ids.ed_age.text
+        security_question = self.root.ids.ed_security_question.text
+        security_answer = self.root.ids.ed_security_answer.text
+
+        # Fonction traitement ici
+
     def log_out(self):
         self.root.current = "connection"
         print("Success login out")
