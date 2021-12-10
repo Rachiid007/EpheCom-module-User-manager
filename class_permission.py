@@ -3,7 +3,7 @@ from Users import MongoConnector
 
 
 def argument():
-    """Functions that manage all the arguments' script"""
+    """test Functions that manage all the arguments' script"""
     parser = argparse.ArgumentParser()
     parser.add_argument('arguments', nargs='+', help='entrer la methode à appeler et ses arguments ensuite')
     args = parser.parse_args()
