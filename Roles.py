@@ -110,6 +110,7 @@ class RolesDBManagement:
         except Exception as error:
             print(error)
 
+
     def get_all_roles_fromdb(self):
         """ Get the list of roles from the DB
         :pre:
