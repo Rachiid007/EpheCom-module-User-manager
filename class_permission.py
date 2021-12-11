@@ -13,15 +13,25 @@ def argument():
 
 
 class Permissions(MongoConnector):
-    def __init__(self, id_p, name, description):
+    def __init__(self, id_p, name="", description=""):
         """
-        instancie l'objet permission avec un id, un nom, une description
+        prend en argument un id(int), un nom(str), une description(str)
+        POST: instancie les variables passées en argument
+              SI la BDD répond
+        RAISE: lance une exception "error" si la BDD ne répond pas
         """
         super().__init__()
 
         self.__id_p = id_p
         self.__name = name
         self.__description = description
+
+        try:
+            with MongoConnector() as connector:
+                self.__collection = connector.db["Permissions"]
+
+        except Exception as error:
+            print(error)
 
     @property
     def id_permission(self):
@@ -38,9 +48,10 @@ class Permissions(MongoConnector):
     # @name.setter
     def changer_nom(self, new_name):
         """
-        appelle une requète qui change le nom d'une permission dans la database
+        appelle une requète qui change le nom d'une permission dans la BDD à partir de son nom actuel
         PRE : un string avec le nouveau nom
-        POST :
+        POST : appelle une requète qui change le nom d'une permission par un nouveau nom dans la BDD
+               à partir de son nom actuel
         """
         query = {"name": self.__name}
 
@@ -48,37 +59,39 @@ class Permissions(MongoConnector):
             "name": new_name
         }}
 
-        self.db["permissions"].update_one(query, new_values)
+        self.db["Permissions"].update_one(query, new_values)
 
     # @description.setter
     def changer_desc(self, new_desc):
         """
-        appelle une requète qui change la description d'une permission dans la database
+        appelle une requète qui change la description d'une permission dans la BDD à partir de sa description actuelle
         PRE : un string avec la nouvelle description
-        POST :
+        POST : appelle une requète qui change la description d'une permission par une nouvelle dans la BDD
+               à partir de sa description actuelle
         """
         query = {"description": self.__description}
         new_values = {"$set": {"description": new_desc}}
 
-        self.db["permissions"].update_one(query, new_values)
+        self.db["Permissions"].update_one(query, new_values)
 
     def add_db_perm(self):
         """
-        appelle une requète qui ajoute une permission avec un id, un nom, une description dans la database
+        appelle une requète qui ajoute une permission avec un id, un nom, une description dans la BDD
         PRE :
-        POST :
+        POST : appelle une requète qui ajoute une permission avec un id, un nom, une description dans la BDD
+
         """
         query = {{"id_p": self.__id_p, "name": self.__name, "description": self.__description}}
-        self.db["permissions"].insert_one(query)
+        self.db["Permissions"].insert_one(query)
 
     def remove_perm(self):
         """
-        appelle une requète qui supprime une permission dans la database à partir de son id
+        appelle une requète qui supprime une permission dans la BDD à partir de son id
         PRE :
-        POST :
+        POST : appelle une requète qui supprime une permission dans la BDD à partir de son id
         """
         query = {"id_p": self.__id_p}
-        self.db["permissions"].delete_one(query)
+        self.db["Permissions"].delete_one(query)
 
 
 if __name__ == '__main__':
