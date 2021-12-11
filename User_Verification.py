@@ -4,6 +4,11 @@ import re
 
 
 def is_valid_pseudo(pseudo):
+    """ Check if a a pseudo is valid
+    :pre: pseudo str
+    :post: return bool: True if the pseudo contains a character, a digit or _ - + @ and
+        its size is between 4 and 25 otherwise False
+    """
     if not re.match(r'\b[A-Za-z0-9._+-@]{4,25}\b', pseudo):
         return False, "Le Pseudo ne respect pas la norme !"
     else:
@@ -11,6 +16,11 @@ def is_valid_pseudo(pseudo):
 
 
 def is_valid_password(password):
+    """ Check if a password is valid
+    :pre: password str
+    :post: return bool: True if the pseudo contains a character, a digit or _ - + @ and
+        its size is between 7 and 25 otherwise False
+    """
     if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
         return False, "Le MDP ne respect pas la norme !"
     else:
@@ -18,6 +28,11 @@ def is_valid_password(password):
 
 
 def is_same_password(password, confimation_password):
+    """ Check if a password is equal to the confirmation password
+    :pre: password str, confimation_password str
+    :post: return bool: True if the password is equal to the confirmation password otherwise False
+    """
+
     if password != confimation_password:
         return False, "Les 2 MDP ne correspondent pas !"
     else:
@@ -25,6 +40,11 @@ def is_same_password(password, confimation_password):
 
 
 def is_age_min_13_yeas(age):
+    """ Check if the age os greater is greater than 13
+    :pre: age str
+    :post: return bool: True if the age is greater than 13 otherwise False
+    """
+
     if int(age) < 13:
         return False, "Vous devez avoir minimum 13 ans !"
     else:
@@ -32,6 +52,11 @@ def is_age_min_13_yeas(age):
 
 
 def is_valide_email(email):
+    """ Check if the email address is valid
+    :pre: email str
+    :post: return bool: True if the email is valid otherwise False
+    """
+
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
     if not re.fullmatch(regex, email):
@@ -41,6 +66,11 @@ def is_valide_email(email):
 
 
 def register_verify(user_name, email, age, password, confimation_password):
+    """ Check if the register fields are valid
+    :pre: user_name str, email str, age str, password str, confimation_password str
+    :post: return bool: True if the fields are valid otherwise False
+    """
+
     if is_valid_pseudo(user_name) and is_valid_password(password) and is_same_password(password,
                                                                 confimation_password) and is_age_min_13_yeas(age):
 
@@ -57,6 +87,11 @@ def register_verify(user_name, email, age, password, confimation_password):
 
 
 def login_verify(user_name, password):
+    """ Check if the user name and password exist in the DB
+    :pre: user_name str, password str
+    :post: return bool: True if the user name and password exist in the DB otherwise False
+    """
+
     user_test = Users(user_name=user_name, email="", password=password, age="")
     return user_test.is_user_in_bdd()
 
