@@ -3,8 +3,16 @@ from connexion_bdd import MongoConnector
 
 
 class Users:
+    """this class collects all information about a user"""
+
     def __init__(self, user_name, email="", password="", age="", first_name="", last_name="", security_question="",
                  security_answer=""):
+        """ This builds a User based on user name, email, password, age, first name, last name, security question,
+                 security answer
+        :pre: user_name str, email str, password str, age str, first_name str, last_name str, security_question str,
+                 security_answer str
+        :post: object user created
+        """
 
         self.user_name = user_name
         self.email = email
@@ -23,8 +31,9 @@ class Users:
             print(error)
 
     def create(self):
-        """ Ajoute l'utilisateur dans la BDD.
-        :return:
+        """ Insert a user in the DB
+        :pre
+        :post: user inserted in the DB
         """
         query = {
             "user_name": self.user_name,
@@ -41,6 +50,12 @@ class Users:
 
     def update(self, new_user_name, new_email, new_first_name, new_last_name, new_password, new_security_question,
                new_security_answer):
+        """ Update a user in the DB
+        :pre new_user_name str: a new user name , new_email str : a new email, new_first_name str: a new first name,
+            new_last_name str: a new last name, new_security_question str: a new security question,
+                 new_security_answer str: a new security answer
+        :post: user updated in the DB
+        """
 
         query = {"user_name": self.user_name}
 
@@ -56,9 +71,9 @@ class Users:
         self.__collection.update_one(query, new_values)
 
     def delete(self):
-        """
-        Supprime l'utilisateur de la BDD.
-        :return:
+        """ delete a user from the DB
+        :pre
+        :post: user deleted from the DB
         """
         query = {"user_name": self.user_name}
         self.__collection.delete_one(query)
@@ -96,6 +111,9 @@ class Users:
             return False
 
     def is_user_in_bdd(self):
+        """ Vérifiez si l'utilisateur existe dans la base de données.
+        :return: True si le user courant existe dans la BDD et sinon False.
+        """
         query = {"user_name": self.user_name, "password": self.password}
         res = self.__collection.find_one(query)
         if res is None:
