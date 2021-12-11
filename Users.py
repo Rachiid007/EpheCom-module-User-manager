@@ -3,7 +3,16 @@ from connexion_bdd import MongoConnector
 
 
 class Users:
-    def __init__(self, user_name, email, password, age, first_name="", last_name="", q_securite="", ans_securite=""):
+    """this class collects all information about a user"""
+
+    def __init__(self, user_name, email="", password="", age="", first_name="", last_name="", security_question="",
+                 security_answer=""):
+        """ This builds a User based on user name, email, password, age, first name, last name, security question,
+                 security answer
+        :pre: user_name str, email str, password str, age str, first_name str, last_name str, security_question str,
+                 security_answer str
+        :post: object user created
+        """
 
         self.user_name = user_name
         self.email = email
@@ -11,8 +20,8 @@ class Users:
         self.first_name = first_name
         self.last_name = last_name
         self.age = age
-        self.q_securite = q_securite
-        self.ans_securite = ans_securite
+        self.security_question = security_question
+        self.security_answer = security_answer
 
         try:
             with MongoConnector() as connector:
@@ -22,8 +31,9 @@ class Users:
             print(error)
 
     def create(self):
-        """ Ajoute l'utilisateur dans la BDD.
-        :return:
+        """ Insert a user in the DB
+        :pre
+        :post: user inserted in the DB
         """
         query = {
             "user_name": self.user_name,
@@ -32,14 +42,20 @@ class Users:
             "first_name": self.first_name,
             "last_name": self.last_name,
             "age": self.age,
-            "q_securite": self.q_securite,
-            "ans_securite": self.ans_securite,
+            "security_question": self.security_question,
+            "security_answer": self.security_answer,
             "list_role": [22, 25, 50]
         }
         self.__collection.insert_one(query)
 
-    def update(self, new_user_name, new_email, new_first_name, new_last_name, new_password, new_q_securite,
-               new_ans_securite):
+    def update(self, new_user_name, new_email, new_first_name, new_last_name, new_password, new_security_question,
+               new_security_answer):
+        """ Update a user in the DB
+        :pre new_user_name str: a new user name , new_email str : a new email, new_first_name str: a new first name,
+            new_last_name str: a new last name, new_security_question str: a new security question,
+                 new_security_answer str: a new security answer
+        :post: user updated in the DB
+        """
 
         query = {"user_name": self.user_name}
 
@@ -49,15 +65,15 @@ class Users:
             "first_name": new_first_name,
             "last_name": new_last_name,
             "password": new_password,
-            "q_securite": new_q_securite,
-            "ans_securite": new_ans_securite
+            "security_question": new_security_question,
+            "security_answer": new_security_answer
         }}
         self.__collection.update_one(query, new_values)
 
     def delete(self):
-        """
-        Supprime l'utilisateur de la BDD.
-        :return:
+        """ delete a user from the DB
+        :pre
+        :post: user deleted from the DB
         """
         query = {"user_name": self.user_name}
         self.__collection.delete_one(query)
@@ -95,51 +111,12 @@ class Users:
             return False
 
     def is_user_in_bdd(self):
+        """ Vérifiez si l'utilisateur existe dans la base de données.
+        :return: True si le user courant existe dans la BDD et sinon False.
+        """
         query = {"user_name": self.user_name, "password": self.password}
         res = self.__collection.find_one(query)
         if res is None:
             return False, "L'utilisateur n'existe pas ou MDP erroné !"
         else:
             return True, res
-
-
-def register_verify(user_name, email, age, password, confirm_password):
-    if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
-        return False, "Le MDP ne respect pas la norme !"
-
-    if password != confirm_password:
-        return False, "Les 2 MDP ne correspondent pas !"
-
-    if age < 13:
-        return False, "Vous devez avoir minimum 13 ans !"
-
-    user_test = Users(user_name, email, password, age)
-
-    if not user_test.is_exist_user_name():
-        return False, "Le nom d'utilisateur existe déjà !"
-
-    if not user_test.is_exist_email():
-        return False, "L'adresse email existe déjà !"
-
-    user_test.create()
-    return True
-
-
-def login_verify(user_name, password):
-    user_test = Users(user_name=user_name, email="", password=password, age="")
-    return user_test.is_user_in_bdd()
-
-
-if __name__ == '__main__':
-    user1 = Users(user_name="Rachiid007", password="rachid1234", email="rachid@gmail.com", age="")
-    # user1.create()
-    print(user1.is_user_in_bdd())
-
-    # print(user1.is_user_in_bdd())
-    # il_est_dans_la_db = user1.is_user_in_bdd()[0]
-    # print(il_est_dans_la_db)
-
-    # list_users()
-    # print(user1.is_exist_user_name())
-
-    pass

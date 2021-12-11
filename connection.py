@@ -61,6 +61,7 @@ class Connection(MDApp):
         if pseudo == "" or password == "" or password_confirm == "" or email == "":
             return snackbar_message("All field must be completed !")
 
+        print(pseudo, password, password_confirm, email)
         #   Reset field
         self.root.ids.r_pseudo.text = ""
         self.root.ids.r_password.text = ""
