@@ -117,7 +117,6 @@ class RolesDBManagement:
         :post: roles_List list of Role: the list of roles collected from the DB
         :raises:DoesnotExistException if no role found in the DB
         """
-
         """
         roles_list = []
         for x in self.__collection.find():
