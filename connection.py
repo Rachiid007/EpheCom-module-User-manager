@@ -1,7 +1,7 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
-from Users import *
+from User_Verification import *
 
 
 def snackbar_message(text: str) -> None:
