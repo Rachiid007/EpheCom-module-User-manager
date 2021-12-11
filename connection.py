@@ -74,7 +74,7 @@ class Connection(MDApp):
         if not verification[0]:
             return snackbar_message(verification[1])
 
-        print("Register done")
+        print(verification[1])
 
     def display_profile_data(self, data: dict):
         data_keys = data.keys()
