@@ -145,6 +145,25 @@ class RolesDBManagement:
 
         return roles_list
 
+    def get_roles_by_id_user(self, id_user):
+
+        """ Get the list of roles that have the id_user given in the param
+        :pre: id_user int: the id_user of the role
+        :post: list_roles list: the list of roles that have the name given in the param
+        :raises:DoesnotExistException if no role found in the DB
+        """
+        myquery = {"id_user": id_user}
+        roles_list = []
+
+        for x in self.__collection.find(myquery):
+            roles_list.append(Role(x["_id"], x["name"], x["description"], x["id_user"],
+                                   x["perm_list"]))
+
+        if len(roles_list) == 0:
+            raise DoesnotExistException("Role doesn't exist in the DB")
+
+        return roles_list
+
     def get_role_by_name_userid(self, name, id_user):
         """ Get the list of roles that have the name and id_user given in the param
         :pre: name str: the name of the role, id_user int : the id of a user
