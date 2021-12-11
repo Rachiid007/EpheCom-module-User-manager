@@ -117,10 +117,15 @@ class RolesDBManagement:
         :post: roles_List list of Role: the list of roles collected from the DB
         :raises:DoesnotExistException if no role found in the DB
         """
+
+        """
         roles_list = []
         for x in self.__collection.find():
             roles_list.append(Role(x["_id"], x["name"], x["description"],
-                                   x["id_user"], x["perm_list"]))
+                                   x["id_user"], x["perm_list"]))"""
+
+        roles_list = [Role(x["_id"], x["name"], x["description"],
+                                   x["id_user"], x["perm_list"]) for x in self.__collection.find()]
 
         if len(roles_list) == 0:
             raise DoesnotExistException("There are no Roles in the DB")
