@@ -83,7 +83,7 @@ def register_verify(user_name, email, age, password, confimation_password):
             return False, "L'adresse email existe déjà !"
 
         user_test.create()
-        return True
+        return True, "L'utilisateur a été créée"
 
 
 def login_verify(user_name, password):
