@@ -62,7 +62,7 @@ class Connection(MDApp):
         if pseudo == "" or password == "" or password_confirm == "" or email == "":
             return snackbar_message("All field must be completed !")
 
-        print(pseudo, password, password_confirm, email)
+        print(pseudo, password, password_confirm, email,age)
         #   Reset field
         self.root.ids.r_pseudo.text = ""
         self.root.ids.r_password.text = ""
@@ -71,7 +71,7 @@ class Connection(MDApp):
         self.root.ids.r_age.text = ""
 
         # Appel de la fonction de traitement ici
-        verification = register_verify(pseudo, email, password, password_confirm, age)
+        verification = register_verify(pseudo, email, age, password, password_confirm)
         if not verification[0]:
             return snackbar_message(verification[1])
 

@@ -25,7 +25,7 @@ def is_same_password(password, confimation_password):
 
 
 def is_age_min_13_yeas(age):
-    if age < 13:
+    if int(age) < 13:
         return False, "Vous devez avoir minimum 13 ans !"
     else:
         return True
@@ -42,15 +42,14 @@ def is_valide_email(email):
 
 def register_verify(user_name, email, age, password, confimation_password):
     if is_valid_pseudo(user_name) and is_valid_password(password) and is_same_password(password,
-                                                                                       confimation_password) and is_age_min_13_yeas(
-        age):
+                                                                confimation_password) and is_age_min_13_yeas(age):
 
         user_test = Users(user_name, email, password, age)
 
-        if not user_test.is_exist_user_name():
+        if user_test.is_exist_user_name():
             return False, "Le nom d'utilisateur existe déjà !"
 
-        if not user_test.is_exist_email():
+        if user_test.is_exist_email():
             return False, "L'adresse email existe déjà !"
 
         user_test.create()
