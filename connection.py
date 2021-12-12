@@ -49,7 +49,6 @@ class Connection(MDApp):
         self.root.ids.l_password.text = ""
 
         # Lancement du login avec db
-        users_test = Users(user_name=pseudo, email="", password=password, age=13)
         is_user_db = login_verify(pseudo, password)
 
         # Gestion données incorrecte
@@ -90,16 +89,25 @@ class Connection(MDApp):
         print(verification[1])
 
     def display_profile_data(self, data: dict):
+        """
+        Affiche les informations de l'utilisateurs courant sur la page dédiée
+        """
         display = generate_display_user_data(data)
         self.root.ids.p_display_pseudo.text = display[0]
         self.root.ids.p_display_data.text = display[1]
 
     def display_other_user_data(self, data: dict):
+        """
+        Affiche les informations d'un autre utilisateur sur la page dédiée
+        """
         display = generate_display_user_data(data)
         self.root.ids.ou_display_pseudo.text = display[0]
         self.root.ids.ou_display_data.text = display[1]
 
     def update_profile(self):
+        """
+        Traite la mise à jour des informations de l'utilisateur courant
+        """
         current_pseudo = self.root.ids.p_display_pseudo.text
         new_pseudo = self.root.ids.ed_pseudo.text
         email = self.root.ids.ed_email.text
@@ -116,10 +124,16 @@ class Connection(MDApp):
         snackbar_message(verification[1])
 
     def delete_profile(self):
+        """
+        Supprime l'utilisateur courant de la BDD
+        """
         delete_user(self.root.ids.p_display_pseudo.text)
         self.log_out()
 
     def display_list_user(self):
+        """
+        S'occupe de génèrer l'affichage de la list de tout les utilisateurs de l'application
+        """
         list_user = UsersOperations().get_all_users()
         for user in list_user:
             self.root.ids.display_all_user.add_widget(
@@ -127,6 +141,9 @@ class Connection(MDApp):
             )
 
     def log_out(self):
+        """
+        Déconnecte l'utilisateur courant de l'application
+        """
         self.root.current = "connection"
         print("Success login out")
 
