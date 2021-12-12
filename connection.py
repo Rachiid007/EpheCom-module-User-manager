@@ -71,8 +71,7 @@ class Connection(MDApp):
 
         # Appel de la fonction de traitement ici
         verification = register_verify(pseudo, email, age, password, password_confirm)
-        if not verification[0]:
-            return snackbar_message(verification[1])
+        snackbar_message(verification[1])
 
         print(verification[1])
 
@@ -87,7 +86,8 @@ class Connection(MDApp):
         self.root.ids.p_display_data.text = data_string
 
     def update_profile(self):
-        pseudo = self.root.ids.ed_pseudo.text
+        current_pseudo = self.root.ids.p_display_pseudo.text
+        new_pseudo = self.root.ids.ed_pseudo.text
         email = self.root.ids.ed_email.text
         password = self.root.ids.ed_password.text
         confirm_password = self.root.ids.ed_password_confirm.text
@@ -97,6 +97,9 @@ class Connection(MDApp):
         security_answer = self.root.ids.ed_security_answer.text
 
         # Fonction traitement ici
+        verification = update_verify(current_pseudo, new_pseudo, email, first_name, last_name, password,
+                                     confirm_password, security_question, security_answer)
+        snackbar_message(verification[1])
 
     def log_out(self):
         self.root.current = "connection"
