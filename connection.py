@@ -5,6 +5,11 @@ from Users import *
 
 
 def snackbar_message(text: str) -> None:
+    """
+    ouvre une fenètre avec le texte passé en argument
+    PRE: prend en argument un texte(str)
+    POST: ouvre en kivy une fenètre avec le texte passé en argument
+    """
     Snackbar(
         text=f"[color=#ffffff]{text} [/color]",
         font_size="20dp",
