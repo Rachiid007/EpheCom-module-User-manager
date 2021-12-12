@@ -92,7 +92,6 @@ class Connection(MDApp):
         confirm_password = self.root.ids.ed_password_confirm.text
         first_name = self.root.ids.ed_first_name.text
         last_name = self.root.ids.ed_last_name.text
-        age = self.root.ids.ed_age.text
         security_question = self.root.ids.ed_security_question.text
         security_answer = self.root.ids.ed_security_answer.text
 
