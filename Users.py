@@ -1,11 +1,10 @@
-import re
 from connexion_bdd import MongoConnector
 
 
 class Users:
     """this class collects all information about a user"""
 
-    def __init__(self, user_name, email="", password="", age="", first_name="", last_name="", security_question="",
+    def __init__(self, user_name, email, password, age="", first_name="", last_name="", security_question="",
                  security_answer=""):
         """ This builds a User based on user name, email, password, age, first name, last name, security question,
                  security answer
@@ -112,7 +111,7 @@ class Users:
 
     def is_user_in_bdd(self):
         """ Vérifiez si l'utilisateur existe dans la base de données.
-        :return: True si le user courant existe dans la BDD et sinon False.
+        :return: True si le user courant existe dans la BDD avec un Dictionnaire des données de l'User et sinon False.
         """
         query = {"user_name": self.user_name, "password": self.password}
         res = self.__collection.find_one(query)

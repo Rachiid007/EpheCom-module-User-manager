@@ -1,6 +1,7 @@
 from Users import Users
 from connexion_bdd import MongoConnector
 import re
+import hashlib
 
 
 def is_valid_pseudo(pseudo):
@@ -65,16 +66,29 @@ def is_valide_email(email):
         return True
 
 
+def password_encryption(password: str):
+    """ password encryption
+    :pre: password must be string
+    :post: return str: The encrypted password
+    """
+    password = password.encode("utf-8")
+    hash_object = hashlib.sha512(password)
+    hex_dig = hash_object.hexdigest()
+    return hex_dig
+
+
 def register_verify(user_name, email, age, password, confimation_password):
     """ Check if the register fields are valid
     :pre: user_name str, email str, age str, password str, confimation_password str
     :post: return bool: True if the fields are valid otherwise False
     """
 
-    if is_valid_pseudo(user_name) and is_valid_password(password) and is_same_password(password,
-                                                                confimation_password) and is_age_min_13_yeas(age):
+    if is_valid_pseudo(user_name)[0] and is_valid_password(password)[0] and \
+            is_same_password(password, confimation_password)[0] and is_age_min_13_yeas(age)[0]:
 
-        user_test = Users(user_name, email, password, age)
+        password_encrypt = password_encryption(password)
+
+        user_test = Users(user_name, email, password_encrypt, age)
 
         if user_test.is_exist_user_name():
             return False, "Le nom d'utilisateur existe déjà !"
@@ -92,22 +106,22 @@ def login_verify(user_name, password):
     :post: return bool: True if the user name and password exist in the DB otherwise False
     """
 
-    user_test = Users(user_name=user_name, email="", password=password, age="")
+    password_encrypt = password_encryption(password)
+
+    user_test = Users(user_name=user_name, email="", password=password_encrypt)
     return user_test.is_user_in_bdd()
 
 
-"""
-pas fini la modiff !
-"""
-
-
-def update_verify(current_user, new_email, new_first_name, new_last_name, new_password, new_password_confim,
-                  new_security_question, new_security_answer):
-    if is_valid_pseudo(n_user_name) and is_valide_email(new_email) and is_same_password(new_password,
-                                                                                        new_password_confim):
-        user_test = Users(current_user)
+def update_verify(current_user, new_user_name, new_email, new_first_name, new_last_name, new_password,
+                  new_password_confim, new_security_question, new_security_answer):
+    if is_valid_pseudo(new_user_name) and is_valide_email(new_email) and is_same_password(new_password,
+                                                                                          new_password_confim):
+        user_test = Users(user_name=current_user, email="", password="")
         user_test.update(new_user_name, new_email, new_first_name, new_last_name, new_password, new_security_question,
                          new_security_answer)
+        return True, "Vos informations ont bien été modifié !"
+    else:
+        return False, "Un ou plusieurs champ ne respecte pas la norme !!"
 
 
 def get_all_users():
