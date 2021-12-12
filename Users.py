@@ -88,34 +88,3 @@ class Users:
             return False
         else:
             return res
-
-    def is_exist_user_name(self):
-        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
-        :return: True si le user_name courant existe dans la BDD et sinon False.
-        """
-        query = {"user_name": self.user_name}
-        if self.__collection.count_documents(query):
-            return True
-        else:
-            return False
-
-    def is_exist_email(self):
-        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
-        :return: True si le user_name courant existe dans la BDD et sinon False.
-        """
-        query = {"email": self.email}
-        if self.__collection.count_documents(query):
-            return True
-        else:
-            return False
-
-    def is_user_in_bdd(self):
-        """ Vérifiez si l'utilisateur existe dans la base de données.
-        :return: True si le user courant existe dans la BDD avec un Dictionnaire des données de l'User et sinon False.
-        """
-        query = {"user_name": self.user_name, "password": self.password}
-        res = self.__collection.find_one(query)
-        if res is None:
-            return False, "L'utilisateur n'existe pas ou MDP erroné !"
-        else:
-            return True, res
