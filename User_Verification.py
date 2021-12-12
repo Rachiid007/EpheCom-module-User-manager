@@ -4,6 +4,55 @@ import re
 import hashlib
 
 
+class UsersOperations(object):
+
+    def __init__(self):
+        try:
+            with MongoConnector() as connector:
+                self.__collection = connector.db["users"]
+
+        except Exception as error:
+            print(error)
+
+    def get_all_users(self):
+        resultat = self.__collection.find({})
+        return [x for x in resultat]
+
+    def delete_all_users(self):
+        self.__collection.delete_many({})
+
+    def is_exist_user_name(self, user_name):
+        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
+        :return: True si le user_name courant existe dans la BDD et sinon False.
+        """
+        query = {"user_name": user_name}
+        if self.__collection.count_documents(query):
+            return True
+        else:
+            return False
+
+    def is_exist_email(self, email):
+        """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
+        :return: True si le user_name courant existe dans la BDD et sinon False.
+        """
+        query = {"email": email}
+        if self.__collection.count_documents(query):
+            return True
+        else:
+            return False
+
+    def is_user_in_bdd(self, user_name, password):
+        """ Vérifiez si l'utilisateur existe dans la base de données.
+        :return: True si le user courant existe dans la BDD avec un Dictionnaire des données de l'User et sinon False.
+        """
+        query = {"user_name": user_name, "password": password}
+        res = self.__collection.find_one(query)
+        if res is None:
+            return False, "L'utilisateur n'existe pas ou MDP erroné !"
+        else:
+            return True, res
+
+
 def is_valid_pseudo(pseudo):
     """ Check if a a pseudo is valid
     :pre: pseudo str
@@ -13,7 +62,7 @@ def is_valid_pseudo(pseudo):
     if not re.match(r'\b[A-Za-z0-9._+-@]{4,25}\b', pseudo):
         return False, "Le Pseudo ne respect pas la norme !"
     else:
-        return True, "Le pseudo est ok"
+        return True, "pseudo ok"
 
 
 def is_valid_password(password):
@@ -25,7 +74,7 @@ def is_valid_password(password):
     if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
         return False, "Le MDP ne respect pas la norme !"
     else:
-        return True, "Le MPD est ok"
+        return True, "MDP ok"
 
 
 def is_same_password(password, confimation_password):
@@ -37,7 +86,7 @@ def is_same_password(password, confimation_password):
     if password != confimation_password:
         return False, "Les 2 MDP ne correspondent pas !"
     else:
-        return True, "Les 2 MDP sont semblable"
+        return True, "Les 2 MDP ok !"
 
 
 def is_age_min_13_yeas(age):
@@ -49,7 +98,7 @@ def is_age_min_13_yeas(age):
     if int(age) < 13:
         return False, "Vous devez avoir minimum 13 ans !"
     else:
-        return True, "L'age est ok"
+        return True, "age ok"
 
 
 def is_valide_email(email):
@@ -63,7 +112,7 @@ def is_valide_email(email):
     if not re.fullmatch(regex, email):
         return False, "L'email n'est pas valide !"
     else:
-        return True, "Email valide"
+        return True, "email ok"
 
 
 def password_encryption(password: str):
@@ -83,21 +132,25 @@ def register_verify(user_name, email, age, password, confimation_password):
     :post: return bool: True if the fields are valid otherwise False
     """
 
-    if is_valid_pseudo(user_name)[0] and is_valid_password(password)[0] and \
+    if is_valid_pseudo(user_name)[0] and is_valide_email(email)[0] and is_valid_password(password)[0] and \
             is_same_password(password, confimation_password)[0] and is_age_min_13_yeas(age)[0]:
 
         password_encrypt = password_encryption(password)
 
-        user_test = Users(user_name, email, password_encrypt, age)
-
-        if user_test.is_exist_user_name():
+        user_exist = UsersOperations().is_exist_user_name(user_name)
+        if user_exist:
             return False, "Le nom d'utilisateur existe déjà !"
 
-        if user_test.is_exist_email():
+        email_exist = UsersOperations().is_exist_email(email)
+        if email_exist:
             return False, "L'adresse email existe déjà !"
 
-        user_test.create()
+        user = Users(user_name, email, password_encrypt, age)
+        user.create()
         return True, "L'utilisateur a été créée"
+
+    else:
+        return "probleme validation"
 
 
 def login_verify(user_name, password):
@@ -108,8 +161,8 @@ def login_verify(user_name, password):
 
     password_encrypt = password_encryption(password)
 
-    user_test = Users(user_name=user_name, email="", password=password_encrypt)
-    return user_test.is_user_in_bdd()
+    user_info = UsersOperations().is_user_in_bdd(user_name, password_encrypt)
+    return user_info
 
 
 def update_verify(current_user, new_user_name, new_email, new_first_name, new_last_name, new_password,
@@ -124,22 +177,19 @@ def update_verify(current_user, new_user_name, new_email, new_first_name, new_la
         return False, "Un ou plusieurs champ ne respecte pas la norme !!"
 
 
-def get_all_users():
-    try:
-        with MongoConnector() as connector:
-            collection = connector.db["users"]
-            resultat = collection.find({})
-            list_of_users = [x for x in resultat]
-            return list_of_users
-
-    except Exception as error:
-        print(error)
-
-
 if __name__ == '__main__':
-    user1 = Users(user_name="Rachiid007", password="rachid1234", email="rachid@gmail.com", age="")
+    # register_verify("Abderrachid", "bellaalirachid@gmail.com", 53, "abdel", "abdel")
     # user1.create()
-    print(user1.is_user_in_bdd())
+    # user1.delete_all_users()
+
+    # print(login_verify("rachid1080", "abdel1234"))
+
+    # register_verify("rachid1080", "bellaalirachid@gmail.com", 36, "abdel1234", "abdel1234")
+
+    user_opera1 = UsersOperations()
+    print(user_opera1.get_all_users())
+
+    # print(update_verify("rachid1080", "tarek1070", "tarek@oliphant.com", "Tarek", "Chaabi", "tarek123", "tarek123", "date de naissance ?", "21-04-1998"))
 
     # print(user1.is_user_in_bdd())
     # il_est_dans_la_db = user1.is_user_in_bdd()[0]
