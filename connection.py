@@ -37,7 +37,7 @@ class Connection(MDApp):
 
         # Lancement du login avec db
         users_test = Users(user_name=pseudo, email="", password=password, age=13)
-        is_user_db = users_test.is_user_in_bdd()
+        is_user_db = login_verify(pseudo, password)
 
         # Gestion données incorrecte
         if not is_user_db[0]:
@@ -80,9 +80,10 @@ class Connection(MDApp):
         data_keys = data.keys()
         data_string = f""
         for keys in data_keys:
-            if keys == "_id":
+            if keys == "_id" or keys == "password" or keys == "user_name":
                 continue
             data_string += f"\n\n{keys} : {data[keys] if not data[keys]=='' else None}"
+        self.root.ids.p_display_pseudo.text = data["user_name"]
         self.root.ids.p_display_data.text = data_string
 
     def update_profile(self):
