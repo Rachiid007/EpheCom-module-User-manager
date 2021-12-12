@@ -13,7 +13,7 @@ def is_valid_pseudo(pseudo):
     if not re.match(r'\b[A-Za-z0-9._+-@]{4,25}\b', pseudo):
         return False, "Le Pseudo ne respect pas la norme !"
     else:
-        return True
+        return True, "Le pseudo est ok"
 
 
 def is_valid_password(password):
@@ -25,7 +25,7 @@ def is_valid_password(password):
     if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
         return False, "Le MDP ne respect pas la norme !"
     else:
-        return True
+        return True, "Le MPD est ok"
 
 
 def is_same_password(password, confimation_password):
@@ -37,7 +37,7 @@ def is_same_password(password, confimation_password):
     if password != confimation_password:
         return False, "Les 2 MDP ne correspondent pas !"
     else:
-        return True
+        return True, "Les 2 MDP sont semblable"
 
 
 def is_age_min_13_yeas(age):
@@ -49,7 +49,7 @@ def is_age_min_13_yeas(age):
     if int(age) < 13:
         return False, "Vous devez avoir minimum 13 ans !"
     else:
-        return True
+        return True, "L'age est ok"
 
 
 def is_valide_email(email):
@@ -63,7 +63,7 @@ def is_valide_email(email):
     if not re.fullmatch(regex, email):
         return False, "L'email n'est pas valide !"
     else:
-        return True
+        return True, "Email valide"
 
 
 def password_encryption(password: str):
