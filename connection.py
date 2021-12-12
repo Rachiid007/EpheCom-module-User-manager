@@ -1,5 +1,7 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.snackbar import Snackbar
 from User_Verification import *
 
@@ -14,6 +16,8 @@ def snackbar_message(text: str) -> None:
 
 
 class Connection(MDApp):
+    dialog = None
+
     def build(self):
         """
         Construit l'application sur base du modèle codé sur connection.kv
@@ -100,6 +104,27 @@ class Connection(MDApp):
         verification = update_verify(current_pseudo, new_pseudo, email, first_name, last_name, password,
                                      confirm_password, security_question, security_answer)
         snackbar_message(verification[1])
+
+    def show_alert_delete_profile(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Delete profile ?",
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        on_press=self.dialog.dismiss()
+                    ),
+                    MDFlatButton(
+                        text="DISCARD",
+                        on_press=self.delete_profile()
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+    def delete_profile(self):
+        delete_user(self.root.ids.p_display_pseudo.text)
+        self.log_out()
 
     def log_out(self):
         self.root.current = "connection"

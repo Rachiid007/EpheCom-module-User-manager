@@ -328,6 +328,13 @@ ScreenManager:
                             on_press: root.current = "profile"
 
                         MDRaisedButton:
+                            text: "[color=#ffffff]Delete[/color]"
+                            font_size: 25
+                            md_bg_color: [98/255, 0/255, 0/255, 0.5]
+                            pos_hint: {"center_x": 0.5}
+                            on_press: app.delete_profile()
+
+                        MDRaisedButton:
                             text: "[color=#ffffff]Update[/color]"
                             font_size: 25
                             md_bg_color: [140/255, 255/255, 255/255, 0.5]
