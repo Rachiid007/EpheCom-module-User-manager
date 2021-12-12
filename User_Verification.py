@@ -18,6 +18,10 @@ class UsersOperations(object):
         resultat = self.__collection.find({})
         return [x for x in resultat]
 
+    def delete_specific_user(self, user_name):
+        query = {"user_name": user_name}
+        self.__collection.delete_one(query)
+
     def delete_all_users(self):
         self.__collection.delete_many({})
 
@@ -177,6 +181,10 @@ def update_verify(current_user, new_user_name, new_email, new_first_name, new_la
         return False, "Un ou plusieurs champ ne respecte pas la norme !!"
 
 
+def delete_user(user_name):
+    UsersOperations().delete_specific_user(user_name)
+
+
 if __name__ == '__main__':
     # register_verify("Abderrachid", "bellaalirachid@gmail.com", 53, "abdel", "abdel")
     # user1.create()
@@ -187,6 +195,7 @@ if __name__ == '__main__':
     # register_verify("rachid1080", "bellaalirachid@gmail.com", 36, "abdel1234", "abdel1234")
 
     user_opera1 = UsersOperations()
+    # delete_user("ChaosArnhug")
     print(user_opera1.get_all_users())
 
     # print(update_verify("rachid1080", "tarek1070", "tarek@oliphant.com", "Tarek", "Chaabi", "tarek123", "tarek123", "date de naissance ?", "21-04-1998"))
