@@ -99,10 +99,13 @@ def is_age_min_13_yeas(age):
     :post: return bool: True if the age is greater than 13 otherwise False
     """
 
-    if int(age) < 13:
-        return False, "Vous devez avoir minimum 13 ans !"
+    if isinstance(age, int):
+        if age < 13:
+            return False, "Vous devez avoir minimum 13 ans !"
+        else:
+            return True, "age ok"
     else:
-        return True, "age ok"
+        return False, "L'age doit etre un entier"
 
 
 def is_valide_email(email):
@@ -136,25 +139,45 @@ def register_verify(user_name, email, age, password, confimation_password):
     :post: return bool: True if the fields are valid otherwise False
     """
 
-    if is_valid_pseudo(user_name)[0] and is_valide_email(email)[0] and is_valid_password(password)[0] and \
-            is_same_password(password, confimation_password)[0] and is_age_min_13_yeas(age)[0]:
+    if user_name == "" or email == "" or age == "" or password == "" or confimation_password == "":
+        return False, "Un ou plusieur champ ne sont pas complété !"
 
-        password_encrypt = password_encryption(password)
+    user_name_ok = is_valid_pseudo(user_name)
+    email_ok = is_valide_email(email)
+    password_ok = is_valid_password(password)
+    two_passwd_ok = is_same_password(password, confimation_password)
+    age_ok = is_age_min_13_yeas(age)
 
-        user_exist = UsersOperations().is_exist_user_name(user_name)
-        if user_exist:
-            return False, "Le nom d'utilisateur existe déjà !"
+    if user_name_ok[0]:
+        if email_ok[0]:
+            if password_ok[0]:
+                if two_passwd_ok[0]:
+                    if age_ok[0]:
 
-        email_exist = UsersOperations().is_exist_email(email)
-        if email_exist:
-            return False, "L'adresse email existe déjà !"
+                        password_encrypt = password_encryption(password)
 
-        user = Users(user_name, email, password_encrypt, age)
-        user.create()
-        return True, "L'utilisateur a été créée"
+                        user_exist = UsersOperations().is_exist_user_name(user_name)
+                        if user_exist:
+                            return False, "Le nom d'utilisateur existe déjà !"
 
+                        email_exist = UsersOperations().is_exist_email(email)
+                        if email_exist:
+                            return False, "L'adresse email existe déjà !"
+
+                        user = Users(user_name, email, password_encrypt, age)
+                        user.create()
+                        return True, "L'utilisateur a été créée"
+
+                    else:
+                        return age_ok
+                else:
+                    return two_passwd_ok
+            else:
+                return password_ok
+        else:
+            return email_ok
     else:
-        return "les champ ne respect pas la norme !"
+        return user_name_ok
 
 
 def login_verify(user_name, password):
@@ -171,7 +194,6 @@ def login_verify(user_name, password):
 
 def update_verify(current_user, new_user_name, new_email, new_first_name, new_last_name, new_password,
                   new_password_confim, new_security_question, new_security_answer):
-
     if is_valid_pseudo(new_user_name)[0] and is_valide_email(new_email)[0] and \
             is_same_password(new_password, new_password_confim)[0]:
 
@@ -188,13 +210,17 @@ def delete_user(user_name):
 
 
 if __name__ == '__main__':
+
     user_opera1 = UsersOperations()
 
     # print(login_verify("rachid1080", "abdel1234"))
 
-    # register_verify("rachid1080", "bellaalirachid@gmail.com", 36, "abdel1234", "abdel1234")
+    # register_verify("rachid007", "bellaalirachid@gmail.com", 36, "abdel1234", "abdel1234")
 
     # delete_user("ChaosArnhug")
 
-    print(update_verify("rachid1080", "", "tarek@oliphant.com", "Tarek", "Chaabi", "tarek123", "tarek123", "date de naissance ?", "21-04-1998"))
-    # print(user_opera1.get_all_users())
+    # print(update_verify("rachid1080", "", "tarek@oliphant.com", "Tarek", "Chaabi", "tarek123", "tarek123", "date de naissance ?", "21-04-1998"))
+
+    # user_opera1.delete_all_users()
+
+    print(user_opera1.get_all_users())
