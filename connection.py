@@ -1,8 +1,7 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.dialog import MDDialog
 from kivymd.uix.snackbar import Snackbar
+from kivymd.uix.list import OneLineListItem
 from User_Verification import *
 
 
@@ -13,6 +12,16 @@ def snackbar_message(text: str) -> None:
         bg_color=[118 / 255, 106 / 255, 221 / 255, 1],
         snackbar_animation_dir="Top"
     ).open()
+
+
+def generate_display_user_data(data: dict) -> tuple:
+    data_keys = data.keys()
+    data_string = f""
+    for keys in data_keys:
+        if keys == "_id" or keys == "password" or keys == "user_name":
+            continue
+        data_string += f"\n\n{keys} : {data[keys] if not data[keys] == '' else None}"
+    return data["user_name"], data_string
 
 
 class Connection(MDApp):
@@ -50,6 +59,7 @@ class Connection(MDApp):
         print(is_user_db[1])
         self.root.current = "profile"
         self.display_profile_data(is_user_db[1])
+        self.display_list_user()
 
     def register(self):
         """
@@ -80,14 +90,14 @@ class Connection(MDApp):
         print(verification[1])
 
     def display_profile_data(self, data: dict):
-        data_keys = data.keys()
-        data_string = f""
-        for keys in data_keys:
-            if keys == "_id" or keys == "password" or keys == "user_name":
-                continue
-            data_string += f"\n\n{keys} : {data[keys] if not data[keys]=='' else None}"
-        self.root.ids.p_display_pseudo.text = data["user_name"]
-        self.root.ids.p_display_data.text = data_string
+        display = generate_display_user_data(data)
+        self.root.ids.p_display_pseudo.text = display[0]
+        self.root.ids.p_display_data.text = display[1]
+
+    def display_other_user_data(self, data: dict):
+        display = generate_display_user_data(data)
+        self.root.ids.ou_display_pseudo.text = display[0]
+        self.root.ids.ou_display_data.text = display[1]
 
     def update_profile(self):
         current_pseudo = self.root.ids.p_display_pseudo.text
@@ -105,26 +115,16 @@ class Connection(MDApp):
                                      confirm_password, security_question, security_answer)
         snackbar_message(verification[1])
 
-    def show_alert_delete_profile(self):
-        if not self.dialog:
-            self.dialog = MDDialog(
-                title="Delete profile ?",
-                buttons=[
-                    MDFlatButton(
-                        text="CANCEL",
-                        on_press=self.dialog.dismiss()
-                    ),
-                    MDFlatButton(
-                        text="DISCARD",
-                        on_press=self.delete_profile()
-                    ),
-                ],
-            )
-        self.dialog.open()
-
     def delete_profile(self):
         delete_user(self.root.ids.p_display_pseudo.text)
         self.log_out()
+
+    def display_list_user(self):
+        list_user = UsersOperations().get_all_users()
+        for user in list_user:
+            self.root.ids.display_all_user.add_widget(
+                OneLineListItem(text=user["user_name"])  # on_release=self.display_other_user_data(user)
+            )
 
     def log_out(self):
         self.root.current = "connection"
