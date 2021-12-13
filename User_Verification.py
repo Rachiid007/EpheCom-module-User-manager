@@ -145,7 +145,7 @@ def register_verify(user_name, email, age, password, confimation_password):
     """
 
     if user_name == "" or email == "" or age == "" or password == "" or confimation_password == "":
-        return False, "Un ou plusieur champ ne sont pas complété !"
+        return False, "Un ou plusieurs champs ne sont pas complétés !"
 
     user_name_ok = is_valid_pseudo(user_name)
     email_ok = is_valide_email(email)
@@ -171,7 +171,7 @@ def register_verify(user_name, email, age, password, confimation_password):
 
                         user = Users(user_name, email, password_encrypt, age)
                         user.create()
-                        return True, "L'utilisateur a été créée"
+                        return True, "L'utilisateur a été créé"
 
                     else:
                         return age_ok
@@ -205,9 +205,9 @@ def update_verify(current_user, new_user_name, new_email, new_first_name, new_la
         user_test = Users(user_name=current_user, email="", password="")
         user_test.update(new_user_name, new_email, new_first_name, new_last_name, new_password, new_security_question,
                          new_security_answer)
-        return True, "Vos informations ont bien été modifié !"
+        return True, "Vos informations ont bien été modifiées !"
     else:
-        return False, "Un ou plusieurs champ ne respecte pas la norme !!"
+        return False, "Un ou plusieurs champs ne respecte pas la norme !!"
 
 
 def delete_user(user_name):
