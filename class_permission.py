@@ -12,19 +12,16 @@ def argument():
     return args.arguments
 
 
-class Permissions(MongoConnector):
-    def __init__(self, id_p, name="", description=""):
+class Permissions():
+    def __init__(self, name="", description=""):
         """
         prend en argument un id(int), un nom(str), une description(str)
         POST: instancie les variables passées en argument
               SI la BDD répond
         RAISE: lance une exception "error" si la BDD ne répond pas
         """
-        if id_p is None:
-            raise IdpIsNone("id_p obligatoire")
         super().__init__()
 
-        self.__id_p = id_p
         self.__name = name
         self.__description = description
 
@@ -34,10 +31,6 @@ class Permissions(MongoConnector):
 
         except Exception as error:
             print(error)
-
-    @property
-    def id_permission(self):
-        return self.__id_p
 
     @property
     def name(self):
@@ -92,7 +85,7 @@ class Permissions(MongoConnector):
         PRE :
         POST : appelle une requète qui supprime une permission dans la BDD à partir de son id
         """
-        query = {"id_p": self.__id_p}
+        query = {"name": self.__name}
         self.db["Permissions"].delete_one(query)
 
         #rajouter une check permissions (id p)
