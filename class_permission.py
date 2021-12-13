@@ -21,7 +21,7 @@ class Permissions(MongoConnector):
         RAISE: lance une exception "error" si la BDD ne répond pas
         """
         if id_p is None:
-            raise id_p_is_None("id_p obligatoire")
+            raise IdpIsNone("id_p obligatoire")
         super().__init__()
 
         self.__id_p = id_p
@@ -96,7 +96,7 @@ class Permissions(MongoConnector):
         self.db["Permissions"].delete_one(query)
 
 
-class id_p_is_None(Exception):
+class IdpIsNone(Exception):
     pass
 
 
