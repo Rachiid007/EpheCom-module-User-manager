@@ -1,5 +1,5 @@
 from connexion_bdd import MongoConnector
-
+from User_Verification import *
 
 class AlreadyExistException(Exception):
     pass
@@ -153,8 +153,8 @@ class RolesDBManagement:
     def get_roles_by_id_user(self, id_user):
 
         """ Get the list of roles that have the id_user given in the param
-        :pre: id_user int: the id_user of the role
-        :post: list_roles list: the list of roles that have the name given in the param
+        :pre: id_user int: the id_user of a user
+        :post: list_roles list: the list of roles that have the user_id given in the param
         :raises:DoesnotExistException if no role found in the DB
         """
         myquery = {"id_user": id_user}
@@ -168,6 +168,16 @@ class RolesDBManagement:
             raise DoesnotExistException("Role doesn't exist in the DB")
 
         return roles_list
+
+    def get_roles_by_pseudo(self, pseudo):
+
+        """ Get the list of roles that have the pseudo given in the param
+        :pre: pseudo str: the pseudo of a user
+        :post: list_roles list: the list of roles that have the pseudo given in the param
+        :raises: DoesnotExistException if no role found in the DB
+        """
+        obj_user_operation = UsersOperations()
+        return get_roles_by_id_user(obj_user_operation.get_id_user(pseudo))
 
     def get_role_by_name_userid(self, name, id_user):
         """ Get the list of roles that have the name and id_user given in the param
@@ -243,8 +253,9 @@ if __name__ == '__main__':
         role1.name = "admin"
         role1.id_user = 1080
         rolemgt.update_role_indb(role1)
+        print(rolemgt.get_roles_by_pseudo("Rachiid007"))
         print(role1)
-        print(rolemgt.get_all_roles_fromdb())
+        print(rolemgt.get_all_roles_fromdb()[0])
 
     except Exception as e:
         print(e)

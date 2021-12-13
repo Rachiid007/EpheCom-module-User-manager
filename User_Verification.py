@@ -18,6 +18,11 @@ class UsersOperations(object):
         resultat = self.__collection.find({})
         return [x for x in resultat]
 
+    def get_id_user(self, pseudo):
+        myquery = {"user_name": pseudo}
+        resultat = self.__collection.find_one(myquery)
+        return resultat["_id"]
+
     def delete_specific_user(self, user_name):
         query = {"user_name": user_name}
         self.__collection.delete_one(query)
