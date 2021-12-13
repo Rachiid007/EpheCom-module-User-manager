@@ -1,7 +1,8 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
-from Users import *
+from kivymd.uix.list import OneLineListItem
+from User_Verification import *
 
 
 def snackbar_message(text: str) -> None:
@@ -18,7 +19,19 @@ def snackbar_message(text: str) -> None:
     ).open()
 
 
+def generate_display_user_data(data: dict) -> tuple:
+    data_keys = data.keys()
+    data_string = f""
+    for keys in data_keys:
+        if keys == "_id" or keys == "password" or keys == "user_name":
+            continue
+        data_string += f"\n\n{keys} : {data[keys] if not data[keys] == '' else None}"
+    return data["user_name"], data_string
+
+
 class Connection(MDApp):
+    dialog = None
+
     def build(self):
         """
         Construit l'application sur base du modèle codé sur connection.kv
@@ -41,8 +54,7 @@ class Connection(MDApp):
         self.root.ids.l_password.text = ""
 
         # Lancement du login avec db
-        users_test = Users(user_name=pseudo, email="", password=password, age=13)
-        is_user_db = users_test.is_user_in_bdd()
+        is_user_db = login_verify(pseudo, password)
 
         # Gestion données incorrecte
         if not is_user_db[0]:
@@ -51,6 +63,7 @@ class Connection(MDApp):
         print(is_user_db[1])
         self.root.current = "profile"
         self.display_profile_data(is_user_db[1])
+        self.display_list_user()
 
     def register(self):
         """
@@ -75,35 +88,67 @@ class Connection(MDApp):
         self.root.ids.r_age.text = ""
 
         # Appel de la fonction de traitement ici
-        verification = register_verify(pseudo, email, password, password_confirm, age)
-        if not verification[0]:
-            return snackbar_message(verification[1])
+        verification = register_verify(pseudo, email, age, password, password_confirm)
+        snackbar_message(verification[1])
 
-        print("Register done")
+        print(verification[1])
 
     def display_profile_data(self, data: dict):
-        data_keys = data.keys()
-        data_string = f""
-        for keys in data_keys:
-            if keys == "_id":
-                continue
-            data_string += f"\n\n{keys} : {data[keys] if not data[keys]=='' else None}"
-        self.root.ids.p_display_data.text = data_string
+        """
+        Affiche les informations de l'utilisateurs courant sur la page dédiée
+        """
+        display = generate_display_user_data(data)
+        self.root.ids.p_display_pseudo.text = display[0]
+        self.root.ids.p_display_data.text = display[1]
+
+    def display_other_user_data(self, data: dict):
+        """
+        Affiche les informations d'un autre utilisateur sur la page dédiée
+        """
+        display = generate_display_user_data(data)
+        self.root.ids.ou_display_pseudo.text = display[0]
+        self.root.ids.ou_display_data.text = display[1]
 
     def update_profile(self):
-        pseudo = self.root.ids.ed_pseudo.text
+        """
+        Traite la mise à jour des informations de l'utilisateur courant
+        """
+        current_pseudo = self.root.ids.p_display_pseudo.text
+        new_pseudo = self.root.ids.ed_pseudo.text
         email = self.root.ids.ed_email.text
         password = self.root.ids.ed_password.text
         confirm_password = self.root.ids.ed_password_confirm.text
         first_name = self.root.ids.ed_first_name.text
         last_name = self.root.ids.ed_last_name.text
-        age = self.root.ids.ed_age.text
         security_question = self.root.ids.ed_security_question.text
         security_answer = self.root.ids.ed_security_answer.text
 
         # Fonction traitement ici
+        verification = update_verify(current_pseudo, new_pseudo, email, first_name, last_name, password,
+                                     confirm_password, security_question, security_answer)
+        snackbar_message(verification[1])
+
+    def delete_profile(self):
+        """
+        Supprime l'utilisateur courant de la BDD
+        """
+        delete_user(self.root.ids.p_display_pseudo.text)
+        self.log_out()
+
+    def display_list_user(self):
+        """
+        S'occupe de génèrer l'affichage de la list de tout les utilisateurs de l'application
+        """
+        list_user = UsersOperations().get_all_users()
+        for user in list_user:
+            self.root.ids.display_all_user.add_widget(
+                OneLineListItem(text=user["user_name"])  # on_release=self.display_other_user_data(user)
+            )
 
     def log_out(self):
+        """
+        Déconnecte l'utilisateur courant de l'application
+        """
         self.root.current = "connection"
         print("Success login out")
 

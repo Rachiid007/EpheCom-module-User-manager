@@ -3,7 +3,7 @@ from connexion_bdd import MongoConnector
 
 
 class Users:
-    def __init__(self, user_name, email="", password="", age="", first_name="", last_name="", security_question="",
+    def __init__(self, user_name, email, password, age="", first_name="", last_name="", security_question="",
                  security_answer=""):
         """
         PRE: prend en argument un pseudo(str), un mdp(str), un age(str), un prénom(str), un nom(str),
