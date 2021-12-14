@@ -1,5 +1,5 @@
 import argparse
-from Users import MongoConnector
+from connexion_bdd import MongoConnector
 
 
 def argument():
@@ -12,7 +12,7 @@ def argument():
     return args.arguments
 
 
-class Permissions():
+class Permissions:
     def __init__(self, name="", description=""):
         """
         prend en argument un id(int), un nom(str), une description(str)
@@ -20,8 +20,6 @@ class Permissions():
               SI la BDD répond
         RAISE: lance une exception "error" si la BDD ne répond pas
         """
-        super().__init__()
-
         self.__name = name
         self.__description = description
 
@@ -54,7 +52,7 @@ class Permissions():
             "name": new_name
         }}
 
-        self.db["Permissions"].update_one(query, new_values)
+        self.__collection.update_one(query, new_values)
 
     # @description.setter
     def changer_desc(self, new_desc):
@@ -67,7 +65,7 @@ class Permissions():
         query = {"description": self.__description}
         new_values = {"$set": {"description": new_desc}}
 
-        self.db["Permissions"].update_one(query, new_values)
+        self.__collection.update_one(query, new_values)
 
     def add_db_perm(self):
         """
@@ -76,8 +74,8 @@ class Permissions():
         POST : appelle une requète qui ajoute une permission avec un id, un nom, une description dans la BDD
 
         """
-        query = {{"id_p": self.__id_p, "name": self.__name, "description": self.__description}}
-        self.db["Permissions"].insert_one(query)
+        query = {{"name": self.__name, "description": self.__description}}
+        self.__collection.insert_one(query)
 
     def remove_perm(self):
         """
@@ -86,20 +84,16 @@ class Permissions():
         POST : appelle une requète qui supprime une permission dans la BDD à partir de son id
         """
         query = {"name": self.__name}
-        self.db["Permissions"].delete_one(query)
+        self.__collection.delete_one(query)
 
-        #rajouter une check permissions (id p)
-
-
-class IdpIsNone(Exception):
-    pass
+        # rajouter une check permissions (id p)
 
 
 if __name__ == '__main__':
     """
     à supprimer
     """
-    perm_test = Permissions(1080, "abdl", "perm de test")
+    perm_test = Permissions("abdl", "perm de test")
 
     if argument()[0] == 'changer_nom':
         perm_test.changer_nom(argument())
@@ -109,5 +103,3 @@ if __name__ == '__main__':
         perm_test.add_db_perm()
     elif argument()[0] == 'remove_perm':
         perm_test.remove_perm()
-
-
