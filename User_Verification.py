@@ -4,7 +4,39 @@ import re
 import hashlib
 
 
-class UsersOperations(object):
+class UserDoesntExist(Exception):
+    pass
+
+
+class EmailAlreadyExist(Exception):
+    pass
+
+
+class PasswordOrUsernameNotCorrect(Exception):
+    pass
+
+
+class PseudoNotValid(Exception):
+    pass
+
+
+class PasswordNotValid(Exception):
+    pass
+
+
+class PasswordsNotSame(Exception):
+    pass
+
+
+class AgeNotValid(Exception):
+    pass
+
+
+class EmailNotValid(Exception):
+    pass
+
+
+class UsersOperations:
 
     def __init__(self):
         try:
@@ -38,7 +70,7 @@ class UsersOperations(object):
         if self.__collection.count_documents(query):
             return True
         else:
-            return False
+            raise UserDoesntExist("Cette utilisateur n'existe pas !")
 
     def is_exist_email(self, email):
         """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
@@ -48,7 +80,7 @@ class UsersOperations(object):
         if self.__collection.count_documents(query):
             return True
         else:
-            return False
+            raise EmailAlreadyExist("L'email est déjà utilisée !")
 
     def is_user_in_bdd(self, user_name, password):
         """ Vérifiez si l'utilisateur existe dans la base de données.
@@ -57,7 +89,7 @@ class UsersOperations(object):
         query = {"user_name": user_name, "password": password}
         res = self.__collection.find_one(query)
         if res is None:
-            return False, "L'utilisateur n'existe pas ou MDP erroné !"
+            raise PasswordOrUsernameNotCorrect("Le Pseudo ou le Mdp est incorrecte !")
         else:
             return True, res
 
@@ -69,7 +101,7 @@ def is_valid_pseudo(pseudo):
         its size is between 4 and 25 otherwise False
     """
     if not re.match(r'\b[A-Za-z0-9._+-@]{5,25}\b', pseudo):
-        return False, "Le Pseudo ne respect pas la norme !"
+        raise PseudoNotValid("Le Pseudo ne respect pas la norme !")
     else:
         return True, "pseudo ok"
 
@@ -81,7 +113,7 @@ def is_valid_password(password):
         its size is between 7 and 25 otherwise False
     """
     if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
-        return False, "Le MDP ne respect pas la norme !"
+        raise PasswordNotValid("Le MDP ne respect pas la norme !")
     else:
         return True, "MDP ok"
 
@@ -93,7 +125,7 @@ def is_same_password(password, confimation_password):
     """
 
     if password != confimation_password:
-        return False, "Les 2 MDP ne correspondent pas !"
+        raise PasswordsNotSame("Les 2 MDP ne correspondent pas !")
     else:
         return True, "Les 2 MDP ok !"
 
@@ -104,13 +136,14 @@ def is_age_min_13_yeas(age):
     :post: return bool: True if the age is greater than 13 otherwise False
     """
 
-    if isinstance(age, int):
-        if age < 13:
-            return False, "Vous devez avoir minimum 13 ans !"
+    try:
+        age_ok = int(age)
+        if age_ok < 13:
+            raise AgeNotValid("Vous devez avoir minimum 13 ans !")
         else:
             return True, "age ok"
-    else:
-        return False, "L'age doit etre un entier"
+    except ValueError:
+        raise AgeNotValid("L'age doit etre un entier")
 
 
 def is_valide_email(email):
@@ -122,7 +155,7 @@ def is_valide_email(email):
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
     if not re.fullmatch(regex, email):
-        return False, "L'email n'est pas valide !"
+        raise EmailNotValid("L'email n'est pas valide !")
     else:
         return True, "email ok"
 
@@ -215,7 +248,6 @@ def delete_user(user_name):
 
 
 if __name__ == '__main__':
-
     user_opera1 = UsersOperations()
 
     # print(login_verify("rachid1080", "abdel1234"))
