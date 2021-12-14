@@ -68,9 +68,12 @@ class Connection(MDApp):
         password_confirm = self.root.ids.r_password_confirm.text
         email = self.root.ids.r_email.text
         age = self.root.ids.r_age.text
+        sec_question = self.root.ids.r_security_question
+        sec_answer = self.root.ids.r_security_answer
 
         # Gestion champs vide
-        if pseudo == "" or password == "" or password_confirm == "" or email == "":
+        if pseudo == "" or password == "" or password_confirm == "" or email == "" or sec_question == "" \
+                or sec_answer == "":
             return snackbar_message("All field must be completed !")
 
         print(pseudo, password, password_confirm, email)
@@ -80,9 +83,11 @@ class Connection(MDApp):
         self.root.ids.r_password_confirm.text = ""
         self.root.ids.r_email.text = ""
         self.root.ids.r_age.text = ""
+        self.root.ids.r_security_question = ""
+        self.root.ids.r_security_answer = ""
 
         # Appel de la fonction de traitement ici
-        verification = register_verify(pseudo, email, age, password, password_confirm)
+        verification = register_verify(pseudo, email, age, password, password_confirm, sec_question, sec_answer)
         snackbar_message(verification[1])
 
         print(verification[1])
