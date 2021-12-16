@@ -60,7 +60,6 @@ class Connection(MDApp):
         if not is_user_db[0]:
             return snackbar_message("Pseudo or password incorrect !")
 
-        print(is_user_db[1])
         self.root.current = "profile"
         self.display_profile_data(is_user_db[1])
         self.display_list_user()
@@ -74,9 +73,12 @@ class Connection(MDApp):
         password_confirm = self.root.ids.r_password_confirm.text
         email = self.root.ids.r_email.text
         age = self.root.ids.r_age.text
+        sec_question = self.root.ids.r_security_question
+        sec_answer = self.root.ids.r_security_answer
 
         # Gestion champs vide
-        if pseudo == "" or password == "" or password_confirm == "" or email == "":
+        if pseudo == "" or password == "" or password_confirm == "" or email == "" or sec_question == "" \
+                or sec_answer == "":
             return snackbar_message("All field must be completed !")
 
         print(pseudo, password, password_confirm, email)
@@ -86,9 +88,11 @@ class Connection(MDApp):
         self.root.ids.r_password_confirm.text = ""
         self.root.ids.r_email.text = ""
         self.root.ids.r_age.text = ""
+        self.root.ids.r_security_question = ""
+        self.root.ids.r_security_answer = ""
 
         # Appel de la fonction de traitement ici
-        verification = register_verify(pseudo, email, age, password, password_confirm)
+        verification = register_verify(pseudo, email, age, password, password_confirm, sec_question, sec_answer)
         snackbar_message(verification[1])
 
         print(verification[1])
@@ -97,9 +101,18 @@ class Connection(MDApp):
         """
         Affiche les informations de l'utilisateurs courant sur la page dédiée
         """
+        # affichage des infos de l'utilisateur
         display = generate_display_user_data(data)
         self.root.ids.p_display_pseudo.text = display[0]
         self.root.ids.p_display_data.text = display[1]
+
+        # Pré remplissage des champs de modifications
+        self.root.ids.ed_pseudo.text = data["user_name"]
+        self.root.ids.ed_email.text = data["email"]
+        self.root.ids.ed_first_name.text = data["first_name"]
+        self.root.ids.ed_last_name.text = data["last_name"]
+        self.root.ids.ed_security_question.text = data["security_question"]
+        self.root.ids.ed_security_answer.text = data["security_answer"]
 
     def display_other_user_data(self, data: dict):
         """

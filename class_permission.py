@@ -1,5 +1,5 @@
 import argparse
-from Users import MongoConnector
+from connexion_bdd import MongoConnector
 
 
 def argument():
@@ -12,19 +12,14 @@ def argument():
     return args.arguments
 
 
-class Permissions(MongoConnector):
-    def __init__(self, id_p, name="", description=""):
+class Permissions:
+    def __init__(self, name="", description=""):
         """
         prend en argument un id(int), un nom(str), une description(str)
         POST: instancie les variables passées en argument
               SI la BDD répond
         RAISE: lance une exception "error" si la BDD ne répond pas
         """
-        if id_p is None:
-            raise IdpIsNone("id_p obligatoire")
-        super().__init__()
-
-        self.__id_p = id_p
         self.__name = name
         self.__description = description
 
@@ -34,10 +29,6 @@ class Permissions(MongoConnector):
 
         except Exception as error:
             print(error)
-
-    @property
-    def id_permission(self):
-        return self.__id_p
 
     @property
     def name(self):
@@ -50,10 +41,9 @@ class Permissions(MongoConnector):
     # @name.setter
     def changer_nom(self, new_name):
         """
-        appelle une requète qui change le nom d'une permission dans la BDD à partir de son nom actuel
-        PRE : un string avec le nouveau nom
-        POST : appelle une requète qui change le nom d'une permission par un nouveau nom dans la BDD
-               à partir de son nom actuel
+        recup chaine de carac (pseudo) et chaine (new name) remplace
+        PRE :
+        POST : self.__newnme --> name
         """
         query = {"name": self.__name}
 
@@ -61,50 +51,45 @@ class Permissions(MongoConnector):
             "name": new_name
         }}
 
-        self.db["Permissions"].update_one(query, new_values)
+        self.__collection.update_one(query, new_values)
 
     # @description.setter
     def changer_desc(self, new_desc):
         """
-        appelle une requète qui change la description d'une permission dans la BDD à partir de sa description actuelle
-        PRE : un string avec la nouvelle description
-        POST : appelle une requète qui change la description d'une permission par une nouvelle dans la BDD
-               à partir de sa description actuelle
+        PRE :
+        POST :
         """
         query = {"description": self.__description}
         new_values = {"$set": {"description": new_desc}}
 
-        self.db["Permissions"].update_one(query, new_values)
+        self.__collection.update_one(query, new_values)
 
     def add_db_perm(self):
         """
-        appelle une requète qui ajoute une permission avec un id, un nom, une description dans la BDD
+        appelle la fctn qui va pull param: class en question avec son propre self, envoie les 3 args et ajoute la perm
         PRE :
-        POST : appelle une requète qui ajoute une permission avec un id, un nom, une description dans la BDD
-
+        POST :
         """
-        query = {{"id_p": self.__id_p, "name": self.__name, "description": self.__description}}
-        self.db["Permissions"].insert_one(query)
+        query = {{"name": self.__name, "description": self.__description}}
+        self.__collection.insert_one(query)
 
     def remove_perm(self):
         """
-        appelle une requète qui supprime une permission dans la BDD à partir de son id
+        appelle la fctn qui envoye un delete request avec l id de ma perm a retirer dans mongodb
         PRE :
-        POST : appelle une requète qui supprime une permission dans la BDD à partir de son id
+        POST :
         """
-        query = {"id_p": self.__id_p}
-        self.db["Permissions"].delete_one(query)
+        query = {"name": self.__name}
+        self.__collection.delete_one(query)
 
-
-class IdpIsNone(Exception):
-    pass
+        # rajouter une check permissions (id p)
 
 
 if __name__ == '__main__':
     """
     à supprimer
     """
-    perm_test = Permissions(1080, "abdl", "perm de test")
+    perm_test = Permissions("abdl", "perm de test")
 
     if argument()[0] == 'changer_nom':
         perm_test.changer_nom(argument())

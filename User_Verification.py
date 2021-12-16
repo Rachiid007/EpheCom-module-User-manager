@@ -1,10 +1,36 @@
+import datetime
+
 from Users import Users
 from connexion_bdd import MongoConnector
 import re
 import hashlib
 
 
-class UsersOperations(object):
+class PasswordOrUsernameNotCorrect(Exception):
+    pass
+
+
+class PseudoNotValid(Exception):
+    pass
+
+
+class PasswordNotValid(Exception):
+    pass
+
+
+class PasswordsNotSame(Exception):
+    pass
+
+
+class AgeNotValid(Exception):
+    pass
+
+
+class EmailNotValid(Exception):
+    pass
+
+
+class UsersOperations:
 
     def __init__(self):
         try:
@@ -17,6 +43,11 @@ class UsersOperations(object):
     def get_all_users(self):
         resultat = self.__collection.find({})
         return [x for x in resultat]
+
+    def get_id_user(self, pseudo):
+        myquery = {"user_name": pseudo}
+        resultat = self.__collection.find_one(myquery)
+        return resultat["_id"]
 
     def delete_specific_user(self, user_name):
         query = {"user_name": user_name}
@@ -52,7 +83,7 @@ class UsersOperations(object):
         query = {"user_name": user_name, "password": password}
         res = self.__collection.find_one(query)
         if res is None:
-            return False, "L'utilisateur n'existe pas ou MDP erroné !"
+            raise PasswordOrUsernameNotCorrect("Le Pseudo ou le Mdp est incorrecte !")
         else:
             return True, res
 
@@ -63,10 +94,14 @@ def is_valid_pseudo(pseudo):
     :post: return bool: True if the pseudo contains a character, a digit or _ - + @ and
         its size is between 4 and 25 otherwise False
     """
-    if not re.match(r'\b[A-Za-z0-9._+-@]{5,25}\b', pseudo):
-        return False, "Le Pseudo ne respect pas la norme !"
-    else:
-        return True, "pseudo ok"
+    try:
+        pseudo_ok = str(pseudo)
+        if not re.match("([A-z]{2,})([0-9_@]{2,})", pseudo_ok):
+            raise PseudoNotValid("Le Pseudo ne respect pas la norme !")
+        else:
+            return True
+    except ValueError:
+        raise PseudoNotValid("Le Pseudo doit etre un String")
 
 
 def is_valid_password(password):
@@ -76,9 +111,9 @@ def is_valid_password(password):
         its size is between 7 and 25 otherwise False
     """
     if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
-        return False, "Le MDP ne respect pas la norme !"
+        raise PasswordNotValid("Le MDP ne respect pas la norme !")
     else:
-        return True, "MDP ok"
+        return True
 
 
 def is_same_password(password, confimation_password):
@@ -88,9 +123,9 @@ def is_same_password(password, confimation_password):
     """
 
     if password != confimation_password:
-        return False, "Les 2 MDP ne correspondent pas !"
+        raise PasswordsNotSame("Les 2 MDP ne correspondent pas !")
     else:
-        return True, "Les 2 MDP ok !"
+        return True
 
 
 def is_age_min_13_yeas(age):
@@ -99,13 +134,14 @@ def is_age_min_13_yeas(age):
     :post: return bool: True if the age is greater than 13 otherwise False
     """
 
-    if isinstance(age, int):
-        if age < 13:
-            return False, "Vous devez avoir minimum 13 ans !"
+    try:
+        age_ok = int(age)
+        if age_ok < 13:
+            raise AgeNotValid("Vous devez avoir minimum 13 ans !")
         else:
-            return True, "age ok"
-    else:
-        return False, "L'age doit etre un entier"
+            return True
+    except ValueError:
+        raise AgeNotValid("L'age doit etre un entier")
 
 
 def is_valide_email(email):
@@ -113,13 +149,17 @@ def is_valide_email(email):
     :pre: email str
     :post: return bool: True if the email is valid otherwise False
     """
+    try:
+        email_ok = str(email)
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        if not re.fullmatch(regex, email_ok):
+            raise EmailNotValid("L'email n'est pas valide !")
+        else:
+            return True
 
-    if not re.fullmatch(regex, email):
-        return False, "L'email n'est pas valide !"
-    else:
-        return True, "email ok"
+    except ValueError:
+        return EmailNotValid("L'email doit être un String !")
 
 
 def password_encryption(password: str):
@@ -133,14 +173,12 @@ def password_encryption(password: str):
     return hex_dig
 
 
-def register_verify(user_name, email, age, password, confimation_password):
+def register_verify(user_name: str, email: str, age: datetime, password: str, confimation_password: str,
+                    security_question: int, security_answer: str):
     """ Check if the register fields are valid
     :pre: user_name str, email str, age str, password str, confimation_password str
     :post: return bool: True if the fields are valid otherwise False
     """
-
-    if user_name == "" or email == "" or age == "" or password == "" or confimation_password == "":
-        return False, "Un ou plusieur champ ne sont pas complété !"
 
     user_name_ok = is_valid_pseudo(user_name)
     email_ok = is_valide_email(email)
@@ -148,36 +186,21 @@ def register_verify(user_name, email, age, password, confimation_password):
     two_passwd_ok = is_same_password(password, confimation_password)
     age_ok = is_age_min_13_yeas(age)
 
-    if user_name_ok[0]:
-        if email_ok[0]:
-            if password_ok[0]:
-                if two_passwd_ok[0]:
-                    if age_ok[0]:
+    if user_name_ok and email_ok and password_ok and two_passwd_ok and age_ok:
 
-                        password_encrypt = password_encryption(password)
+        user_exist = UsersOperations().is_exist_user_name(user_name)
+        if user_exist:
+            return False, "Le nom d'utilisateur existe déjà !"
 
-                        user_exist = UsersOperations().is_exist_user_name(user_name)
-                        if user_exist:
-                            return False, "Le nom d'utilisateur existe déjà !"
+        email_exist = UsersOperations().is_exist_email(email)
+        if email_exist:
+            return False, "L'adresse email existe déjà !"
 
-                        email_exist = UsersOperations().is_exist_email(email)
-                        if email_exist:
-                            return False, "L'adresse email existe déjà !"
+        password_encrypt = password_encryption(password)
 
-                        user = Users(user_name, email, password_encrypt, age)
-                        user.create()
-                        return True, "L'utilisateur a été créée"
-
-                    else:
-                        return age_ok
-                else:
-                    return two_passwd_ok
-            else:
-                return password_ok
-        else:
-            return email_ok
-    else:
-        return user_name_ok
+        user = Users(user_name, email, password_encrypt, age)
+        user.create()
+        return True
 
 
 def login_verify(user_name, password):
@@ -194,15 +217,15 @@ def login_verify(user_name, password):
 
 def update_verify(current_user, new_user_name, new_email, new_first_name, new_last_name, new_password,
                   new_password_confim, new_security_question, new_security_answer):
-    if is_valid_pseudo(new_user_name)[0] and is_valide_email(new_email)[0] and \
-            is_same_password(new_password, new_password_confim)[0]:
+    if is_valid_pseudo(new_user_name) and is_valide_email(new_email) and \
+            is_same_password(new_password, new_password_confim):
 
         user_test = Users(user_name=current_user, email="", password="")
         user_test.update(new_user_name, new_email, new_first_name, new_last_name, new_password, new_security_question,
                          new_security_answer)
-        return True, "Vos informations ont bien été modifié !"
+        return True, "Vos informations ont bien été modifiées !"
     else:
-        return False, "Un ou plusieurs champ ne respecte pas la norme !!"
+        return False, "Un ou plusieurs champs ne respecte pas la norme !!"
 
 
 def delete_user(user_name):
@@ -210,7 +233,6 @@ def delete_user(user_name):
 
 
 if __name__ == '__main__':
-
     user_opera1 = UsersOperations()
 
     # print(login_verify("rachid1080", "abdel1234"))
