@@ -6,8 +6,8 @@ import hashlib
 class Users:
     """this class collects all information about a user"""
 
-    def __init__(self, pseudo, email, password, age="", first_name="", last_name="", security_question="",
-                 security_answer=""):
+    def __init__(self, pseudo: str, email: str, password: str, age: int = "", first_name: str = "", last_name: str = "",
+                 security_question: str = "", security_answer: str = ""):
         """ This builds a User based on user name, email, password, age, first name, last name, security question,
                  security answer
         :pre: pseudo str, email str, password str, age int, first_name str, last_name str, security_question str,
@@ -147,7 +147,6 @@ class ValidationsInfosUsers:
         :pre: age int
         :post: return bool: True if the age is greater than 13 otherwise False
         """
-
         try:
             age_ok = int(age)
         except ValueError:
@@ -434,6 +433,9 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
 
     def delete_user(pseudo: str):
         UsersOperations().delete_specific_user(pseudo)
+
+    def recup_password(pseudo, security_answer):
+        pass
 
 
 if __name__ == '__main__':
