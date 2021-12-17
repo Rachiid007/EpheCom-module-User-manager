@@ -1,18 +1,18 @@
+from Connection_to_DB import MongoConnector
 from interface_kivy.User_Verification import *
-
 
 class AlreadyExistException(Exception):
     pass
 
 
-class DoesNotExistException(Exception):
+class DoesnotExistException(Exception):
     pass
 
 
 class Role:
-    """this Classes collects all information about a role"""
+    """this class collects all information about a role"""
 
-    def __init__(self, id_role: int, name: str, description: str, id_user: int, perm_list: list):
+    def __init__(self, id_role: int , name: str, description: str, id_user: int, perm_list: list):
         """ This builds a Role based on id role, role name , description , id user and permission list
         :pre:
         :post: object role created
@@ -60,39 +60,39 @@ class Role:
         return self.__perm_list
 
     @name.setter
-    def name(self, new_name: str):
+    def name(self, new_name):
         self.__name = new_name
 
     @description.setter
-    def description(self, new_description: str):
+    def description(self, new_description):
         self.__description = new_description
 
     @id_user.setter
-    def id_user(self, new_id_user: int):
+    def id_user(self, new_id_user):
         self.__id_user = new_id_user
 
-    def add_perm(self, permission_id: int):
+    def add_perm(self, permissionid):
         """add a permissionid to the role
         pre: permissionid: int permissionid
         post: a permissionid is added to the list of permissions
         raises: AlreadyExistException if the permission already exist
         """
-        if self.__perm_list.count(permission_id) > 0:
+        if self.__perm_list.count(permissionid) > 0:
             raise AlreadyExistException("Permission already exist in this Role")
 
-        self.__perm_list.append(permission_id)
+        self.__perm_list.append(permissionid)
 
-    def remove_perm(self, permission_id: int):
-        """remove a permission_id from the role
-        pre: permission: int permission_id
-        post: a permission_id is removed from the list of permissions
-        raises: DoesNotExistException if the permission_id doesn't exist
+    def remove_perm(self, permissionid):
+        """remove a permissionid from the role
+        pre: permission: int permissionid
+        post: a permissionid is removed from the list of permissions
+        raises: DoesnotExistException if the permissionid doesn't exist
         """
 
-        if self.__perm_list.count(permission_id) == 0:
-            raise DoesNotExistException("Permission_id doesn't exist in this Role")
+        if self.__perm_list.count(permissionid) == 0:
+            raise DoesnotExistException("Permissionid doesn't exist in this Role")
 
-        self.__perm_list.remove(permission_id)
+        self.__perm_list.remove(permissionid)
 
 
 class RolesDBManagement:
@@ -109,6 +109,17 @@ class RolesDBManagement:
 
         except Exception as error:
             print(error)
+
+    def isrole_exist_indb(self, role):
+        """ Check if a role exist in the DB
+        :pre: role Role: a role object
+        :post: return bool: True if the role exist, otherwise False
+        """
+
+        myquery = {"name": role.name, "id_user": role.id_user}
+        mydoc = self.__collection.find(myquery)
+
+        return len(list(mydoc.clone())) > 0
 
 
     def get_all_roles_fromdb(self):
@@ -127,7 +138,7 @@ class RolesDBManagement:
                                    x["id_user"], x["perm_list"]) for x in self.__collection.find()]
 
         if len(roles_list) == 0:
-            raise DoesNotExistException("There are no Roles in the DB")
+            raise DoesnotExistException("There are no Roles in the DB")
 
         return roles_list
 
@@ -146,7 +157,7 @@ class RolesDBManagement:
                                    x["perm_list"]))
 
         if len(roles_list) == 0:
-            raise DoesNotExistException("Role doesn't exist in the DB")
+            raise DoesnotExistException("Role doesn't exist in the DB")
 
         return roles_list
 
@@ -165,7 +176,7 @@ class RolesDBManagement:
                                    x["perm_list"]))
 
         if len(roles_list) == 0:
-            raise DoesNotExistException("Role doesn't exist in the DB")
+            raise DoesnotExistException("Role doesn't exist in the DB")
 
         return roles_list
 
@@ -189,7 +200,7 @@ class RolesDBManagement:
         myquery = {"name": name, "id_user": id_user}
         mydoc = self.__collection.find(myquery)
         if len(list(mydoc.clone())) == 0:
-            raise DoesNotExistException("getRolebyNameUserId Role-User doesn't exist in the DB")
+            raise DoesnotExistException("getRolebyNameUserId Role-User doesn't exist in the DB")
 
         return Role(mydoc[0]["_id"], mydoc[0]["name"], mydoc[0]["description"], mydoc[0]["id_user"],
                     mydoc[0]["perm_list"])
@@ -197,50 +208,56 @@ class RolesDBManagement:
     def update_role_indb(self, role):
         """ Update a role in the DB
         :pre: role Role: a role object
-        :post: the role updated in the DB
+        :post: str : the role updated in the DB
         :raises:Exception in case of failure
         """
-        myquery = {"_id": role.id_role}
+        if not self.isrole_exist_indb(role):
+            raise DoesnotExistException("Role doesn't exist in the DB")
+
+        myquery = {"name": role.name, "id_user": role.id_user}
         newvalues = {"$set": {"name": role.name, "description": role.description, "id_user": role.id_user,
                               "perm_list": role.perm_list}}
         try:
             self.__collection.update_one(myquery, newvalues)
         except Exception as error:
-            print(error)
+            return error
+
+        return "Role updated in the DB"
 
     def insert_role_indb(self, role):
         """ Insert a role in the DB
         :pre: role Role: a Role object
-        :post: role inserted in the DB
+        :post: str: role inserted in the DB
         """
+        if self.isrole_exist_indb(role):
+            raise AlreadyExistException("Role already exist in the DB")
+
         mydict = {"name": role.name, "description": role.description, "id_user": role.id_user,
                   "perm_list": role.perm_list}
-        return self.__collection.insert_one(mydict)
+        try:
+            self.__collection.insert_one(mydict)
+        except Exception as error:
+            return error
+
+        return "Role inserted in the DB"
 
     def delete_role_fromdb(self, role):
         """ Delete a role from the DB
         :pre: role Role: a role object
-        :post: the role deleted from the DB
+        :post: str the role deleted from the DB
         :raises:Exception in case of failure
         """
+        if not self.isrole_exist_indb(role):
+            raise DoesnotExistException("Role doesn't exist in the DB")
 
-        myquery = {"_id": role.id_role}
+        myquery = {"name": role.name, "id_user": role.id_user}
 
         try:
             self.__collection.delete_one(myquery)
         except Exception as e:
-            print(e)
+            return e
 
-    def isrole_exist_indb(self, role):
-        """ Check if a role exist in the DB
-        :pre: role Role: a role object
-        :post: return bool: True if the role exist, otherwise False
-        """
-
-        myquery = {"name": role.name, "id_user": role.id_user}
-        mydoc = self.__collection.find(myquery)
-
-        return len(list(mydoc.clone())) > 0
+        return "Role deleted from the DB"
 
 
 if __name__ == '__main__':
@@ -250,14 +267,12 @@ if __name__ == '__main__':
         liste_role1 = rolemgt.get_roles_by_name("admin")
         print(liste_role1)
         role1 = rolemgt.get_role_by_name_userid("admin", 1080)
-        role1.name = "admin"
-        role1.id_user = 1080
-        rolemgt.update_role_indb(role1)
-        print(rolemgt.get_roles_by_pseudo("Rachiid007"))
-        print(role1)
-        print(rolemgt.get_all_roles_fromdb()[0])
+        role1.name = "admin3"
+        role1.id_user = "100130"
+        print(rolemgt.insert_role_indb(role1))
+        #print(rolemgt.get_roles_by_pseudo("arnaud"))
+        #print(role1)
+        #print(rolemgt.get_all_roles_fromdb())
 
     except Exception as e:
         print(e)
-
-
