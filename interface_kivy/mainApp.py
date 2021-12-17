@@ -3,6 +3,7 @@ from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.list import OneLineListItem
 from Classes.Users import *
+from kivy.core.window import Window
 
 
 def snackbar_message(text) -> None:
@@ -27,6 +28,9 @@ def generate_display_user_data(data: dict) -> tuple:
             continue
         data_string += f"\n\n{keys} : {data[keys] if not data[keys] == '' else None}"
     return data["pseudo"], data_string
+
+
+Window.fullscreen = 'auto'
 
 
 class Connection(MDApp):
@@ -91,7 +95,7 @@ class Connection(MDApp):
         try:
             register_verify(pseudo, email, age, password, password_confirm, sec_question, sec_answer)
 
-        except Exception or PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
+        except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
                 AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
             snackbar_message(error)
 
