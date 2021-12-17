@@ -10,7 +10,9 @@ class testUnitaire(unittest.TestCase):
         with self.assertRaises(EmailNotValid):
             ValidationsInfosUsers.is_valide_email("gggg@.be")
         with self.assertRaises(EmailNotValid):
-            ValidationsInfosUsers.is_valide_email("gggg@ee.bee")
+            ValidationsInfosUsers.is_valide_email("gggg@ee.b")
+            with self.assertRaises(EmailNotValid):
+            ValidationsInfosUsers.is_valide_email("gggg@e.be")
         self.assertTrue(ValidationsInfosUsers.is_valide_email("aaaa@aaaa.aa"))
 
     def test_is_valid_password(self):
