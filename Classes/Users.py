@@ -1,4 +1,5 @@
 from Classes.Connection_to_DB import MongoConnector
+from datetime import date
 import re
 import hashlib
 
@@ -142,17 +143,18 @@ class ValidationsInfosUsers:
         return True
 
     @staticmethod
-    def is_age_min_13_yeas(age: int):
+    def is_age_min_13_yeas(self, birthdate: str):
         """ Check if the age os greater is greater than 13
         :pre: age int
         :post: return bool: True if the age is greater than 13 otherwise False
         """
         try:
-            age_ok = int(age)
-        except ValueError:
-            raise AgeNotValid("L'age doit etre un entier")
+            age = self.claculate_age(birthdate)
 
-        if age_ok < 13:
+        except ValueError:
+            raise AgeNotValid("chaine de l'age pas bon !!")
+
+        if age < 13:
             raise AgeNotValid("Vous devez avoir minimum 13 ans !")
 
         return True
@@ -236,6 +238,20 @@ class ValidationsInfosUsers:
         hash_object = hashlib.sha512(password)
         hex_dig = hash_object.hexdigest()
         return hex_dig
+
+    @staticmethod
+    def claculate_age(birthdate):
+        today = date.today()
+
+        # A bool that represents if today's day/month precedes the birth day/month
+        one_or_zero = ((today.month, today.day) < (birthdate.month, birthdate.day))
+
+        # Calculate the difference in years from the date object's components
+        year_difference = today.year - birthdate.year
+
+        age = year_difference - one_or_zero
+
+        return age
 
 
 class UsersOperations:
@@ -436,8 +452,27 @@ def delete_user(pseudo: str):
     UsersOperations().delete_specific_user(pseudo)
 
 
-def recup_password(pseudo, security_answer):
-    pass
+def recup_password(pseudo: str):
+    try:
+        user_infos = UsersOperations().get_infos_user(pseudo)
+
+        return user_infos["security_question"]
+
+    except Exception as e:
+        print(e)
+
+
+def check_if_correct_answers(pseudo: str, security_answer):
+    try:
+        user_infos = UsersOperations().get_infos_user(pseudo)
+
+        if user_infos["security_answer"] == security_answer.lower():
+            return True
+
+        return False
+
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':
