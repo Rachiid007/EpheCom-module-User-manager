@@ -1,6 +1,5 @@
-from Users import ValidationsInfosUsers, EmailNotValid, PasswordNotValid
+from Users import ValidationsInfosUsers, EmailNotValid, PasswordNotValid, update_verify, PseudoNotValid, PasswordNotValid, PasswordsNotSame, EmailNotValid, SecurityQuestionNotCorrect, SecurityAnswerNotCorrect, NameNotValid
 import unittest
-
 class testUnitaire(unittest.TestCase):
 
     def test_is_valid_email(self):
@@ -53,6 +52,7 @@ class testUnitaire(unittest.TestCase):
             update_verify("aaaaa","aaaaa","","","","","","","","aa")
         self.assertEqual(update_verify("aaaaa","aaaaaaaaaa","","","","","","","",""), "current Password not correct !")
         self.assertTrue(update_verify("aaaaa","aaaaa","","","","","","","",""))
+        self.assertTrue(update_verify("aaaaa", "aaaaa", "aaaaaaaa", "aaa@aaa.aa", "bbbbb", "ccccc", "dddddddd", "dddddddd", "zzzzzz", "qqqqqq"))
 
 if __name__ == '__main__':
     unittest.main()
