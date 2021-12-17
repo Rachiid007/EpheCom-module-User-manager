@@ -61,39 +61,39 @@ class Role:
         return self.__perm_list
 
     @name.setter
-    def name(self, new_name):
+    def name(self, new_name: str):
         self.__name = new_name
 
     @description.setter
-    def description(self, new_description):
+    def description(self, new_description: str):
         self.__description = new_description
 
     @id_user.setter
-    def id_user(self, new_id_user):
+    def id_user(self, new_id_user: int):
         self.__id_user = new_id_user
 
-    def add_perm(self, permissionid):
+    def add_perm(self, permission_id: int):
         """add a permissionid to the role
         pre: permissionid: int permissionid
         post: a permissionid is added to the list of permissions
         raises: AlreadyExistException if the permission already exist
         """
-        if self.__perm_list.count(permissionid) > 0:
+        if self.__perm_list.count(permission_id) > 0:
             raise AlreadyExistException("Permission already exist in this Role")
 
-        self.__perm_list.append(permissionid)
+        self.__perm_list.append(permission_id)
 
-    def remove_perm(self, permissionid):
-        """remove a permissionid from the role
-        pre: permission: int permissionid
-        post: a permissionid is removed from the list of permissions
-        raises: DoesnotExistException if the permissionid doesn't exist
+    def remove_perm(self, permission_id: int):
+        """remove a permission_id from the role
+        pre: permission: int permission_id
+        post: a permission_id is removed from the list of permissions
+        raises: DoesNotExistException if the permission_id doesn't exist
         """
 
-        if self.__perm_list.count(permissionid) == 0:
-            raise DoesNotExistException("Permissionid doesn't exist in this Role")
+        if self.__perm_list.count(permission_id) == 0:
+            raise DoesNotExistException("Permission_id doesn't exist in this Role")
 
-        self.__perm_list.remove(permissionid)
+        self.__perm_list.remove(permission_id)
 
 
 class RolesDBManagement:
