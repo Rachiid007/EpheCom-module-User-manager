@@ -1,28 +1,17 @@
-import argparse
 from Connection_to_DB import MongoConnector
 
 
-def argument():
-    """
-    à supprimer
-    """
-    parser = argparse.ArgumentParser()
-    parser.add_argument('arguments', nargs='+', help='entrer la methode à appeler et ses arguments ensuite')
-    args = parser.parse_args()
-    return args.arguments
-
-
 class Permissions:
-    def __init__(self, name="", description=""):
+    def __init__(self, name: str = "", description: str = ""):
         """
-        prend en argument un id(int), un nom(str), une description(str)
-        POST: instancie les variables passées en argument
-              SI la BDD répond
-        RAISE: lance une exception "error" si la BDD ne répond pas
+        Initialization of the class Permissions
+        PRE: name and description are string
+        POST: Create a object Permissions with a name name and a description description
         """
         self.__name = name
         self.__description = description
 
+        # To Update as said in the review
         try:
             with MongoConnector() as connector:
                 self.__collection = connector.db["Permissions"]
@@ -38,67 +27,36 @@ class Permissions:
     def description(self):
         return self.__description
 
-    # @name.setter
-    def changer_nom(self, new_name):
-        """
-        recup chaine de carac (pseudo) et chaine (new name) remplace
-        PRE :
-        POST : self.__newnme --> name
-        """
+    @name.setter
+    def name(self, new_name: str) -> None:
         query = {"name": self.__name}
-
-        new_values = {"$set": {
-            "name": new_name
-        }}
+        new_values = {"$set": {"name": new_name}}
 
         self.__collection.update_one(query, new_values)
 
-    # @description.setter
-    def changer_desc(self, new_desc):
-        """
-        PRE :
-        POST :
-        """
+    @description.setter
+    def description(self, new_desc: str) -> None:
         query = {"description": self.__description}
         new_values = {"$set": {"description": new_desc}}
 
         self.__collection.update_one(query, new_values)
 
-    def add_db_perm(self):
+    def add_db_perm(self) -> None:
         """
-        appelle la fctn qui va pull param: Classes en question avec son propre self, envoie les 3 args et ajoute la perm
-        PRE :
-        POST :
+        Send the data of the Permissions into the database
+        PRE:
+        POST: The Permissions is now in the database
         """
         query = {{"name": self.__name, "description": self.__description}}
         self.__collection.insert_one(query)
 
-    def remove_perm(self):
+    def remove_perm(self) -> None:
         """
-        appelle la fctn qui envoye un delete request avec l id de ma perm a retirer dans mongodb
-        PRE :
-        POST :
+        Send a delete request to database
+        PRE:
+        POST: The Permissions is deleted from the database
         """
         query = {"name": self.__name}
         self.__collection.delete_one(query)
 
         # rajouter une check permissions (id p)
-
-
-if __name__ == '__main__':
-    """
-    à supprimer
-    """
-    perm_test = Permissions("abdl", "perm de test")
-
-    if argument()[0] == 'changer_nom':
-        perm_test.changer_nom(argument())
-    elif argument()[0] == 'changer_desc':
-        perm_test.changer_desc(argument())
-    elif argument()[0] == 'add_db_perm':
-        perm_test.add_db_perm()
-    elif argument()[0] == 'remove_perm':
-        perm_test.remove_perm()
-
-
-
