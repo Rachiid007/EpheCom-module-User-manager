@@ -1,4 +1,4 @@
-from Classes.Users import ValidationsInfosUsers, update_verify, PseudoNotValid, PasswordNotValid, PasswordsNotSame, EmailNotValid, SecurityQuestionNotCorrect, SecurityAnswerNotCorrect, NameNotValid
+from Classes.Users import *
 import unittest
 class testUnitaire(unittest.TestCase):
 
@@ -10,7 +10,9 @@ class testUnitaire(unittest.TestCase):
         with self.assertRaises(EmailNotValid):
             ValidationsInfosUsers.is_valide_email("gggg@.be")
         with self.assertRaises(EmailNotValid):
-            ValidationsInfosUsers.is_valide_email("gggg@ee.bee")
+            ValidationsInfosUsers.is_valide_email("gggg@ee.b")
+            with self.assertRaises(EmailNotValid):
+            ValidationsInfosUsers.is_valide_email("gggg@e.be")
         self.assertTrue(ValidationsInfosUsers.is_valide_email("aaaa@aaaa.aa"))
 
     def test_is_valid_password(self):
@@ -21,38 +23,39 @@ class testUnitaire(unittest.TestCase):
         self.assertTrue(ValidationsInfosUsers.is_valid_password("aaaA_aa.a+a@a22a"))
         self.assertTrue(ValidationsInfosUsers.is_valid_password("aaaaaaaaa"))
 
-    def test_update_verify(self):
+        def test_update_verify(self):
         with self.assertRaises(PseudoNotValid):
-            update_verify("aaaaa","aaaaa","aa","","","","","","","")
+            update_verify("totototo","totototo","aa","","","","","","","")
         with self.assertRaises(PseudoNotValid):
-            update_verify("aaaaa","aaaaa","tototo","","","","","","","")
+            update_verify("totototo","totototo","rachid007","","","","","","","")
         with self.assertRaises(EmailNotValid):
-            update_verify("aaaaa","aaaaa","",2,"","","","","","")
+            update_verify("totototo","totototo","",2,"","","","","","")
         with self.assertRaises(EmailNotValid):
-            update_verify("aaaaa","aaaaa","","tototo@students.ephec.be","","","","","","")
+            update_verify("totototo","totototo","","tototo@student.ah","","","","","","")
         with self.assertRaises(NameNotValid):
-            update_verify("aaaaa","aaaaa","","","aa","","","","","")
-        with self.assertRaises(PseudoNotValid):
-            update_verify("aaaaa","aaaaa","","",2,"","","","","")
+            update_verify("totototo","totototo","","","aa","","","","","")
         with self.assertRaises(NameNotValid):
-            update_verify("aaaaa","aaaaa","","","","aa","","","","")
-        with self.assertRaises(PseudoNotValid):
-            update_verify("aaaaa","aaaaa","","","",2,"","","","")
+            update_verify("totototo","totototo","","",2,"","","","","")
+        with self.assertRaises(NameNotValid):
+            update_verify("totototo","totototo","","","","aa","","","","")
+        with self.assertRaises(NameNotValid):
+            update_verify("totototo","totototo","","","",2,"","","","")
         with self.assertRaises(PasswordNotValid):
-            update_verify("aaaaa","aaaaa","","","","","aa","","","")
+            update_verify("totototo","totototo","","","","","aa","","","")
         with self.assertRaises(PasswordsNotSame):
-            update_verify("aaaaa","aaaaa","","","","","aaaaaaaa","aaaaaaaaaaaaa","","")
+            update_verify("totototo","totototo","","","","","aaaaaaaa","aaaaaaaaaaaaa","","")
         with self.assertRaises(SecurityQuestionNotCorrect):
-            update_verify("aaaaa","aaaaa","","","","","","",2,"")
+            update_verify("totototo","totototo","","","","","","",2,"")
         with self.assertRaises(SecurityQuestionNotCorrect):
-            update_verify("aaaaa","aaaaa","","","","","","","aa","")
+            update_verify("totototo","totototo","","","","","","","aa","")
         with self.assertRaises(SecurityAnswerNotCorrect):
-            update_verify("aaaaa","aaaaa","","","","","","","",2)
+            update_verify("totototo","totototo","","","","","","","",2)
         with self.assertRaises(SecurityAnswerNotCorrect):
-            update_verify("aaaaa","aaaaa","","","","","","","","aa")
-        self.assertEqual(update_verify("aaaaa","aaaaaaaaaa","","","","","","","",""), "current Password not correct !")
-        self.assertTrue(update_verify("aaaaa","aaaaa","","","","","","","",""))
-        self.assertTrue(update_verify("aaaaa", "aaaaa", "aaaaaaaa", "aaa@aaa.aa", "bbbbb", "ccccc", "dddddddd", "dddddddd", "zzzzzz", "qqqqqq"))
+            update_verify("totototo","totototo","","","","","","","","aa")
+        self.assertEqual(update_verify("totototo","aaaaaaaaaa","","","","","","","",""), "current Password not correct !")
+        self.assertTrue(update_verify("totototo","totototo","","","","","","","zzzzzz","qqqqqq"))
+        self.assertTrue(update_verify("totototo", "totototo", "tototototo", "toto@gmail.com", "bbbbb", "ccccc", "dddddddd", "dddddddd", "zzzzzz", "qqqqqq"))
+
 
 if __name__ == '__main__':
     unittest.main()
