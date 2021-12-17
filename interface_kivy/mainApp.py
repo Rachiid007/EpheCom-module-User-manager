@@ -2,10 +2,10 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.list import OneLineListItem
-from User_Verification import *
+from Classes.Users import *
 
 
-def snackbar_message(text: str) -> None:
+def snackbar_message(text) -> None:
     """
     ouvre une fenètre avec le texte passé en argument
     PRE: prend en argument un texte(str)
@@ -49,20 +49,17 @@ class Connection(MDApp):
         if pseudo == "" or password == "":
             return snackbar_message("All field must be completed !")
 
-        # Reset field
-        self.root.ids.l_pseudo.text = ""
-        self.root.ids.l_password.text = ""
-
         # Lancement du login avec db
-        is_user_db = login_verify(pseudo, password)
+        try:
+            is_user_db = login_verify(pseudo, password)
+            self.root.current = "profile"
+            self.display_profile_data(is_user_db)
+            self.display_list_user()
 
-        # Gestion données incorrecte
-        if not is_user_db[0]:
-            return snackbar_message("Pseudo or password incorrect !")
-
-        self.root.current = "profile"
-        self.display_profile_data(is_user_db[1])
-        self.display_list_user()
+        except PasswordOrUsernameNotCorrect or Exception as error:
+            snackbar_message(error)
+            self.root.ids.l_pseudo.text = ""
+            self.root.ids.l_password.text = ""
 
     def register(self):
         """
@@ -81,7 +78,6 @@ class Connection(MDApp):
                 or sec_answer == "":
             return snackbar_message("All field must be completed !")
 
-        print(pseudo, password, password_confirm, email)
         #   Reset field
         self.root.ids.r_pseudo.text = ""
         self.root.ids.r_password.text = ""
@@ -92,10 +88,14 @@ class Connection(MDApp):
         self.root.ids.r_security_answer = ""
 
         # Appel de la fonction de traitement ici
-        verification = register_verify(pseudo, email, age, password, password_confirm, sec_question, sec_answer)
-        snackbar_message(verification[1])
+        try:
+            register_verify(pseudo, email, age, password, password_confirm, sec_question, sec_answer)
 
-        print(verification[1])
+        except Exception or PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
+                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+            snackbar_message(error)
+
+        snackbar_message("Profile created")
 
     def display_profile_data(self, data: dict):
         """
@@ -127,6 +127,7 @@ class Connection(MDApp):
         Traite la mise à jour des informations de l'utilisateur courant
         """
         current_pseudo = self.root.ids.p_display_pseudo.text
+        current_password = ""
         new_pseudo = self.root.ids.ed_pseudo.text
         email = self.root.ids.ed_email.text
         password = self.root.ids.ed_password.text
@@ -137,9 +138,13 @@ class Connection(MDApp):
         security_answer = self.root.ids.ed_security_answer.text
 
         # Fonction traitement ici
-        verification = update_verify(current_pseudo, new_pseudo, email, first_name, last_name, password,
-                                     confirm_password, security_question, security_answer)
-        snackbar_message(verification[1])
+        try:
+            update_verify(current_pseudo, current_password, new_pseudo, email, first_name, last_name, password,
+                          confirm_password, security_question, security_answer)
+
+        except Exception or PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
+                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+            snackbar_message(error)
 
     def delete_profile(self):
         """

@@ -431,11 +431,13 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
     except Exception as e:
         print(e)
 
-    def delete_user(pseudo: str):
-        UsersOperations().delete_specific_user(pseudo)
 
-    def recup_password(pseudo, security_answer):
-        pass
+def delete_user(pseudo: str):
+    UsersOperations().delete_specific_user(pseudo)
+
+
+def recup_password(pseudo, security_answer):
+    pass
 
 
 if __name__ == '__main__':
