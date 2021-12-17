@@ -14,7 +14,7 @@ class Role:
     """this class collects all information about a role"""
 
     def __init__(self, id_role: int, name: str, description: str, id_user: int, perm_list: list):
-        """ This builds a Role based on id role, role name , description , id_user and permission list
+        """ This builds a Role based on id role, role name , description , id user and permission list
         :pre:
         :post: object role created
         """

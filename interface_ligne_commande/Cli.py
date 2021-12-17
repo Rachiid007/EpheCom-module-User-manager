@@ -11,7 +11,7 @@ class Cli:
     python Cli.py --action roles --roles all
 
     get roles by name
-    python Cli.py --action roles --roles name --name [Name of a role]
+    python Cli.py --action roles --roles name --name [Name of role]
 
     get roles by pseudo
     python Cli.py --action roles --roles pseudo --pseudo [Pseudo of a role]
@@ -21,7 +21,7 @@ class Cli:
         --id_user [user ID] --perm_list [permission list]
 
     delete a role
-    python Cli.py --action roles --roles delete --name [role name] --id_user [user id]
+    python Cli.py --action roles --roles delete --name [role name] --id_user [id user]
 
     login
     python Cli.py --action login --pseudo [Pseudo] --password [password]
