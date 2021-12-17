@@ -28,14 +28,14 @@ class Permissions:
         return self.__description
 
     @name.setter
-    def name(self, new_name: str) -> None:
+    def name(self, new_name: str):
         query = {"name": self.__name}
         new_values = {"$set": {"name": new_name}}
 
         self.__collection.update_one(query, new_values)
 
     @description.setter
-    def description(self, new_desc: str) -> None:
+    def description(self, new_desc: str):
         query = {"description": self.__description}
         new_values = {"$set": {"description": new_desc}}
 
