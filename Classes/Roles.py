@@ -1,5 +1,6 @@
-from Connection_to_DB import MongoConnector
+from Classes.Connection_to_DB import MongoConnector
 from interface_kivy.User_Verification import *
+
 
 class AlreadyExistException(Exception):
     pass
@@ -12,8 +13,8 @@ class DoesnotExistException(Exception):
 class Role:
     """this class collects all information about a role"""
 
-    def __init__(self, id_role: int , name: str, description: str, id_user: int, perm_list: list):
-        """ This builds a Role based on id role, role name , description , id user and permission list
+    def __init__(self, id_role: int, name: str, description: str, id_user: int, perm_list: list):
+        """ This builds a Role based on id role, role name , description , id_user and permission list
         :pre:
         :post: object role created
         """
@@ -121,6 +122,16 @@ class RolesDBManagement:
 
         return len(list(mydoc.clone())) > 0
 
+    def is_rolename_id_user_exist_indb(self, name, id_user):
+        """ Check if a role exist in the DB
+        :pre: name str, id_user str
+        :post: return bool: True if the role exist, otherwise False
+        """
+
+        myquery = {"name": name, "id_user": id_user}
+        mydoc = self.__collection.find(myquery)
+
+        return len(list(mydoc.clone())) > 0
 
     def get_all_roles_fromdb(self):
         """ Get the list of roles from the DB
@@ -134,8 +145,8 @@ class RolesDBManagement:
             roles_list.append(Role(x["_id"], x["name"], x["description"],
                                    x["id_user"], x["perm_list"]))"""
 
-        roles_list = [Role(x["_id"], x["name"], x["description"],
-                                   x["id_user"], x["perm_list"]) for x in self.__collection.find()]
+        roles_list = [Role(x["_id"], x["name"], x["description"], x["id_user"], x["perm_list"])
+                      for x in self.__collection.find()]
 
         if len(roles_list) == 0:
             raise DoesnotExistException("There are no Roles in the DB")
@@ -166,7 +177,7 @@ class RolesDBManagement:
         """ Get the list of roles that have the id_user given in the param
         :pre: id_user int: the id_user of a user
         :post: list_roles list: the list of roles that have the user_id given in the param
-        :raises:DoesnotExistException if no role found in the DB
+        :raises: Does no ExistException if no role found in the DB
         """
         myquery = {"id_user": id_user}
         roles_list = []
@@ -241,21 +252,21 @@ class RolesDBManagement:
 
         return "Role inserted in the DB"
 
-    def delete_role_fromdb(self, role):
+    def delete_role_fromdb(self, name, id_user):
         """ Delete a role from the DB
         :pre: role Role: a role object
         :post: str the role deleted from the DB
         :raises:Exception in case of failure
         """
-        if not self.isrole_exist_indb(role):
+        if not self.is_rolename_id_user_exist_indb(name, id_user):
             raise DoesnotExistException("Role doesn't exist in the DB")
 
-        myquery = {"name": role.name, "id_user": role.id_user}
+        myquery = {"name": name, "id_user": id_user}
 
         try:
             self.__collection.delete_one(myquery)
-        except Exception as e:
-            return e
+        except Exception as error:
+            return error
 
         return "Role deleted from the DB"
 
