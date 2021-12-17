@@ -185,7 +185,7 @@ class ValidationsInfosUsers:
         try:
             name_ok = str(name)
         except ValueError:
-            raise PseudoNotValid("Le Pseudo doit etre un String")
+            raise NameNotValid("Le Pseudo doit etre un String")
 
         if not re.match("([A-z]{3,})", name_ok):
             raise NameNotValid("Le nom/prenom ne respect pas la norme !")
@@ -386,7 +386,7 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
     try:
         user_infos = UsersOperations().get_infos_user(current_pseudo)
 
-        if new_pseudo != current_pseudo:
+        if new_pseudo != current_pseudo or new_pseudo != "":
             """
             si c un nvx check si il est dispo et correspond à la norme
             """
@@ -395,7 +395,7 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
         else:
             new_pseudo = current_pseudo
 
-        if new_email != user_infos["email"]:
+        if new_email != user_infos["email"] or new_email != "":
             """
             si c un nvx check si il est dispo et correspond à la norme
             """
