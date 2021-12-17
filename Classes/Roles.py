@@ -177,7 +177,7 @@ class RolesDBManagement:
         :raises: DoesnotExistException if no role found in the DB
         """
         obj_user_operation = UsersOperations()
-        return get_roles_by_id_user(obj_user_operation.get_id_user(pseudo))
+        return self.get_roles_by_id_user(obj_user_operation.get_id_user(pseudo))
 
     def get_role_by_name_userid(self, name, id_user):
         """ Get the list of roles that have the name and id_user given in the param

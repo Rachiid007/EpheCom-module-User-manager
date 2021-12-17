@@ -23,10 +23,10 @@ def generate_display_user_data(data: dict) -> tuple:
     data_keys = data.keys()
     data_string = f""
     for keys in data_keys:
-        if keys == "_id" or keys == "password" or keys == "user_name":
+        if keys == "_id" or keys == "password" or keys == "pseudo":
             continue
         data_string += f"\n\n{keys} : {data[keys] if not data[keys] == '' else None}"
-    return data["user_name"], data_string
+    return data["pseudo"], data_string
 
 
 class Connection(MDApp):
@@ -107,7 +107,7 @@ class Connection(MDApp):
         self.root.ids.p_display_data.text = display[1]
 
         # Pré remplissage des champs de modifications
-        self.root.ids.ed_pseudo.text = data["user_name"]
+        self.root.ids.ed_pseudo.text = data["pseudo"]
         self.root.ids.ed_email.text = data["email"]
         self.root.ids.ed_first_name.text = data["first_name"]
         self.root.ids.ed_last_name.text = data["last_name"]
@@ -160,7 +160,7 @@ class Connection(MDApp):
         list_user = UsersOperations().get_all_users()
         for user in list_user:
             self.root.ids.display_all_user.add_widget(
-                OneLineListItem(text=user["user_name"])  # on_release=self.display_other_user_data(user)
+                OneLineListItem(text=user["pseudo"])  # on_release=self.display_other_user_data(user)
             )
 
     def log_out(self):
