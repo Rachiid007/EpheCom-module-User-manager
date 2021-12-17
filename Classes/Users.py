@@ -1,10 +1,10 @@
-from connexion_bdd import MongoConnector
+from Connection_to_DB import MongoConnector
 import re
 import hashlib
 
 
 class Users:
-    """this class collects all information about a user"""
+    """this Classes collects all information about a user"""
 
     def __init__(self, pseudo: str, email: str, password: str, age: int = "", first_name: str = "", last_name: str = "",
                  security_question: str = "", security_answer: str = ""):

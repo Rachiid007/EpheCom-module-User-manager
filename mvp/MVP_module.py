@@ -69,7 +69,7 @@ def open_file(path: str):
 
 class Utilisateur:
     """Une classe pour la gestion des utilisateurs.
-    La class Profile contient toutes les informations à propos d'un utilisateur.
+    La Classes Profile contient toutes les informations à propos d'un utilisateur.
     Args:
         pseudo (str): Le nom d'utilisateur.
         password (str): Le mot de passe.

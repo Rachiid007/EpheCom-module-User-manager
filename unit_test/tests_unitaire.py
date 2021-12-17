@@ -1,4 +1,4 @@
-from Users import ValidationsInfosUsers, EmailNotValid, PasswordNotValid, update_verify, PseudoNotValid, PasswordNotValid, PasswordsNotSame, EmailNotValid, SecurityQuestionNotCorrect, SecurityAnswerNotCorrect, NameNotValid
+from Classes.Users import ValidationsInfosUsers, update_verify, PseudoNotValid, PasswordNotValid, PasswordsNotSame, EmailNotValid, SecurityQuestionNotCorrect, SecurityAnswerNotCorrect, NameNotValid
 import unittest
 class testUnitaire(unittest.TestCase):
 

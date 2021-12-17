@@ -34,9 +34,9 @@ class Connection(MDApp):
 
     def build(self):
         """
-        Construit l'application sur base du modèle codé sur connection.kv
+        Construit l'application sur base du modèle codé sur mainApp.kv
         """
-        return Builder.load_file("connection.kv")
+        return Builder.load_file("mainApp.kv")
 
     def login(self):
         """

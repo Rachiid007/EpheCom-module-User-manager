@@ -1,7 +1,7 @@
 import datetime
 
-from Users import Users
-from connexion_bdd import MongoConnector
+from Classes.Users import Users
+from Classes.Connection_to_DB import MongoConnector
 import re
 import hashlib
 

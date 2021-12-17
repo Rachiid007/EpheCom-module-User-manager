@@ -6,5 +6,5 @@ if __name__ == "__main__":
         ilc_launcher()
 
     else:
-        from connection import *
+        from interface_kivy.mainApp import *
         Connection().run()

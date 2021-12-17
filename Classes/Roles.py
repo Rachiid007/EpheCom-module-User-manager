@@ -1,16 +1,17 @@
-from connexion_bdd import MongoConnector
+from Connection_to_DB import MongoConnector
 from User_Verification import *
+
 
 class AlreadyExistException(Exception):
     pass
 
 
-class DoesnotExistException(Exception):
+class DoesNotExistException(Exception):
     pass
 
 
 class Role:
-    """this class collects all information about a role"""
+    """this Classes collects all information about a role"""
 
     def __init__(self, id_role: int, name: str, description: str, id_user: int, perm_list: list):
         """ This builds a Role based on id role, role name , description , id user and permission list
@@ -90,7 +91,7 @@ class Role:
         """
 
         if self.__perm_list.count(permissionid) == 0:
-            raise DoesnotExistException("Permissionid doesn't exist in this Role")
+            raise DoesNotExistException("Permissionid doesn't exist in this Role")
 
         self.__perm_list.remove(permissionid)
 
@@ -127,7 +128,7 @@ class RolesDBManagement:
                                    x["id_user"], x["perm_list"]) for x in self.__collection.find()]
 
         if len(roles_list) == 0:
-            raise DoesnotExistException("There are no Roles in the DB")
+            raise DoesNotExistException("There are no Roles in the DB")
 
         return roles_list
 
@@ -146,7 +147,7 @@ class RolesDBManagement:
                                    x["perm_list"]))
 
         if len(roles_list) == 0:
-            raise DoesnotExistException("Role doesn't exist in the DB")
+            raise DoesNotExistException("Role doesn't exist in the DB")
 
         return roles_list
 
@@ -165,7 +166,7 @@ class RolesDBManagement:
                                    x["perm_list"]))
 
         if len(roles_list) == 0:
-            raise DoesnotExistException("Role doesn't exist in the DB")
+            raise DoesNotExistException("Role doesn't exist in the DB")
 
         return roles_list
 
@@ -189,7 +190,7 @@ class RolesDBManagement:
         myquery = {"name": name, "id_user": id_user}
         mydoc = self.__collection.find(myquery)
         if len(list(mydoc.clone())) == 0:
-            raise DoesnotExistException("getRolebyNameUserId Role-User doesn't exist in the DB")
+            raise DoesNotExistException("getRolebyNameUserId Role-User doesn't exist in the DB")
 
         return Role(mydoc[0]["_id"], mydoc[0]["name"], mydoc[0]["description"], mydoc[0]["id_user"],
                     mydoc[0]["perm_list"])

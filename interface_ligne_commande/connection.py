@@ -1,4 +1,4 @@
-from interface_kivy.verifications import *
+from User_Verification import *
 
 
 class UnknownMode(Exception):
