@@ -1,5 +1,4 @@
-from Connection_to_DB import MongoConnector
-from User_Verification import *
+from interface_kivy.User_Verification import *
 
 
 class AlreadyExistException(Exception):

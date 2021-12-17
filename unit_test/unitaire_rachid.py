@@ -1,6 +1,6 @@
 import unittest
 
-import User_Verification as u_v
+from interface_kivy import User_Verification as u_v
 
 
 class RachidTest(unittest.TestCase):

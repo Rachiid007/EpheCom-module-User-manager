@@ -1,6 +1,3 @@
-from User_Verification import *
-
-
 class UnknownMode(Exception):
     pass
 
