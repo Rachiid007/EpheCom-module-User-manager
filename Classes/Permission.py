@@ -1,4 +1,4 @@
-from Connection_to_DB import MongoConnector
+from Classes.Connection_to_DB import MongoConnector
 
 
 class Permissions:
