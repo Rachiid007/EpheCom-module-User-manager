@@ -1,7 +1,13 @@
+import sys
+# adding Classes to the system path
+sys.path.insert(0, '..\Classes')
+# adding interface_kivy to the system path
+sys.path.insert(0, '..\interface_kivy')
+
 import datetime
 
-from Classes.Users import Users
-from Classes.Connection_to_DB import MongoConnector
+from Users import Users
+from Connection_to_DB import MongoConnector
 import re
 import hashlib
 

@@ -1,5 +1,11 @@
-from Classes.Roles import *
-from interface_kivy.User_Verification import *
+import sys
+# adding Classes to the system path
+sys.path.insert(0, '..\Classes')
+# adding interface_kivy to the system path
+sys.path.insert(0, '..\interface_kivy')
+
+from Roles import *
+from User_Verification import *
 import argparse
 
 
