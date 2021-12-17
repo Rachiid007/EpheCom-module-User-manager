@@ -272,48 +272,6 @@ ScreenManager:
                         on_press : app.log_out()
 
     Screen:
-        name: "other_user_profile"
-
-        MDRelativeLayout:
-            md_bg_color: [148/255,136/255,251/255, 1]
-            orientation: "vertical"
-
-            MDCard:
-                md_bg_color: [118/255,106/255,221/255, 1]
-                size_hint: None, None
-                size: 400, 600
-                pos_hint: {"center_x": 0.5, "center_y": 0.5}
-                spacing: 5
-                padding: 5
-                orientation: "vertical"
-                elevation: 15
-
-                MDLabel:
-                    id: ou_display_pseudo
-                    text: ""
-                    font_size: 20
-                    color: [1,1,1,1]
-                    halign: "center"
-                    size_hint: 1 , None
-                    pos_hint: {"center_x" : 0.5, "center_y" : 0.5}
-
-                MDLabel:
-                    id: ou_display_data
-                    text: "Something should have appeared here"
-                    multiline: True
-                    color: [1,1,1,1]
-                    font_size: 20
-                    halign: "center"
-                    height: self.texture_size[1]
-
-                MDIconButton:
-                    icon: "subdirectory-arrow-left"
-                    md_bg_color: [140/255, 255/255, 255/255, 0.5]
-                    size_hint: None, None
-                    pos_hint: {"center_x" : 0.5, "center_y" : 0.6}
-                    on_press : root.current = "profile"
-
-    Screen:
         name: "edit_profile"
 
         MDRelativeLayout:
@@ -369,7 +327,7 @@ ScreenManager:
 
                         MDTextFieldRound:
                             id: ed_password
-                            hint_text: "password"
+                            hint_text: "new password"
                             icon_left: "eye-off"
                             password: True
                             allow_copy: False
@@ -419,6 +377,20 @@ ScreenManager:
                             md_bg_color: [140/255, 255/255, 255/255, 0.5]
                             pos_hint: {"center_x": 0.5}
                             on_press: app.update_profile()
+
+                        MDTextFieldRound:
+                            id: ed_current_password
+                            hint_text: "password"
+                            icon_left: "eye-off"
+                            password: True
+                            allow_copy: False
+                            color: [1,1,1,1]
+                            size_hint_x: None
+                            width: 200
+                            font_size: 25
+                            pos_hint: {"center_x": 0.5}
+                            normal_color:[140/255, 255/255, 255/255, 0.7]
+                            color_active: [140/255, 255/255, 255/255, 0.7]
 
                     MDBoxLayout:
                         orientation: "vertical"

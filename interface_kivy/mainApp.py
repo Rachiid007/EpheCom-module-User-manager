@@ -121,7 +121,7 @@ class Connection(MDApp):
     def update_profile(self):
         """Manage the update of the user's data"""
         current_pseudo = self.root.ids.p_display_pseudo.text
-        current_password = ""
+        current_password = self.root.ids.ed_current_password.text
         new_pseudo = self.root.ids.ed_pseudo.text
         email = self.root.ids.ed_email.text
         password = self.root.ids.ed_password.text
