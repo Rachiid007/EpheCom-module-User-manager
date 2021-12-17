@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.list import OneLineListItem
+from kivymd.uix.picker import MDDatePicker
 from Classes.Users import *
 from kivy.core.window import Window
 
@@ -96,10 +97,18 @@ class Connection(MDApp):
             register_verify(pseudo, email, age, password, password_confirm, sec_question, sec_answer)
 
         except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
-                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+               AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
             snackbar_message(error)
 
         snackbar_message("Profile created")
+
+    def display_date_picker(self):
+        date_dialog = MDDatePicker()
+        date_dialog.bind(on_save=self.save_age)
+        date_dialog.open()
+
+    def save_age(self, instance, value, date_range):
+        self.root.ids.r_age.text = str(value)
 
     def display_profile_data(self, data: dict):
         """
@@ -147,7 +156,7 @@ class Connection(MDApp):
                           confirm_password, security_question, security_answer)
 
         except Exception or PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
-                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+               AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
             snackbar_message(error)
 
     def delete_profile(self):
