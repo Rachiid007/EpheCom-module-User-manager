@@ -31,7 +31,7 @@ class testUnitaire(unittest.TestCase):
         with self.assertRaises(EmailNotValid):
             update_verify("totototo","totototo","",2,"","","","","","")
         with self.assertRaises(EmailNotValid):
-            update_verify("totototo","totototo","","tototo@students.ephec.be","","","","","","")
+            update_verify("totototo","totototo","","tototo@student.ah","","","","","","")
         with self.assertRaises(NameNotValid):
             update_verify("totototo","totototo","","","aa","","","","","")
         with self.assertRaises(NameNotValid):
