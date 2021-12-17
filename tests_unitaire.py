@@ -23,7 +23,36 @@ class testUnitaire(unittest.TestCase):
         self.assertTrue(ValidationsInfosUsers.is_valid_password("aaaaaaaaa"))
 
     def test_update_verify(self):
-        print("a faire")
+        with self.assertRaises(PseudoNotValid):
+            update_verify("aaaaa","aaaaa","aa","","","","","","","")
+        with self.assertRaises(PseudoNotValid):
+            update_verify("aaaaa","aaaaa","tototo","","","","","","","")
+        with self.assertRaises(EmailNotValid):
+            update_verify("aaaaa","aaaaa","",2,"","","","","","")
+        with self.assertRaises(EmailNotValid):
+            update_verify("aaaaa","aaaaa","","tototo@students.ephec.be","","","","","","")
+        with self.assertRaises(NameNotValid):
+            update_verify("aaaaa","aaaaa","","","aa","","","","","")
+        with self.assertRaises(PseudoNotValid):
+            update_verify("aaaaa","aaaaa","","",2,"","","","","")
+        with self.assertRaises(NameNotValid):
+            update_verify("aaaaa","aaaaa","","","","aa","","","","")
+        with self.assertRaises(PseudoNotValid):
+            update_verify("aaaaa","aaaaa","","","",2,"","","","")
+        with self.assertRaises(PasswordNotValid):
+            update_verify("aaaaa","aaaaa","","","","","aa","","","")
+        with self.assertRaises(PasswordsNotSame):
+            update_verify("aaaaa","aaaaa","","","","","aaaaaaaa","aaaaaaaaaaaaa","","")
+        with self.assertRaises(SecurityQuestionNotCorrect):
+            update_verify("aaaaa","aaaaa","","","","","","",2,"")
+        with self.assertRaises(SecurityQuestionNotCorrect):
+            update_verify("aaaaa","aaaaa","","","","","","","aa","")
+        with self.assertRaises(SecurityAnswerNotCorrect):
+            update_verify("aaaaa","aaaaa","","","","","","","",2)
+        with self.assertRaises(SecurityAnswerNotCorrect):
+            update_verify("aaaaa","aaaaa","","","","","","","","aa")
+        self.assertEqual(update_verify("aaaaa","aaaaaaaaaa","","","","","","","",""), "current Password not correct !")
+        self.assertTrue(update_verify("aaaaa","aaaaa","","","","","","","",""))
 
 if __name__ == '__main__':
     unittest.main()
