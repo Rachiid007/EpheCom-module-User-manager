@@ -1,11 +1,12 @@
 import sys
+
 # adding Classes to the system path
 sys.path.insert(0, '..\Classes')
 # adding interface_kivy to the system path
 sys.path.insert(0, '..\interface_kivy')
 
 from Connection_to_DB import MongoConnector
-from User_Verification import *
+from Users import *
 
 
 class AlreadyExistException(Exception):
@@ -287,9 +288,9 @@ if __name__ == '__main__':
         role1.name = "admin3"
         role1.id_user = "100130"
         print(rolemgt.insert_role_indb(role1))
-        #print(rolemgt.get_roles_by_pseudo("arnaud"))
-        #print(role1)
-        #print(rolemgt.get_all_roles_fromdb())
+        # print(rolemgt.get_roles_by_pseudo("arnaud"))
+        # print(role1)
+        # print(rolemgt.get_all_roles_fromdb())
 
     except Exception as e:
         print(e)
