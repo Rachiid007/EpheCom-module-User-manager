@@ -129,7 +129,7 @@ class ValidationsInfosUsers:
         :post: return bool: True if the pseudo contains a character, a digit or _ - + @ and
             its size is between 7 and 25 otherwise False
         """
-        if not re.match(r'\b[A-Za-z0-9._+-@]{7,25}\b', password):
+        if not re.match(r'\b[A-z0-9._+-@]{7,25}\b', password):
             raise PasswordNotValid("Le MDP ne respect pas la norme !")
 
         return True
