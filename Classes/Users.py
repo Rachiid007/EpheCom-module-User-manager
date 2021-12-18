@@ -403,6 +403,10 @@ def login_verify(pseudo, password):
 
 def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_first_name, new_last_name, new_password,
                   new_password_confim, new_security_question, new_security_answer):
+    """
+    PRE
+    POST
+    """
     try:
         user_infos = UsersOperations().get_infos_user(current_pseudo)
 
@@ -453,10 +457,18 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
 
 
 def delete_user(pseudo: str):
+    """
+       PRE
+       POST
+       """
     UsersOperations().delete_specific_user(pseudo)
 
 
 def recup_password(pseudo: str):
+    """
+       PRE
+       POST
+       """
     try:
         user_infos = UsersOperations().get_infos_user(pseudo)
 
@@ -467,6 +479,10 @@ def recup_password(pseudo: str):
 
 
 def check_if_correct_answers(pseudo: str, security_answer):
+    """
+       PRE
+       POST
+       """
     try:
         user_infos = UsersOperations().get_infos_user(pseudo)
 
