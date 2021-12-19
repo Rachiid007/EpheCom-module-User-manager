@@ -5,7 +5,7 @@ sys.path.insert(0, '..\Classes')
 sys.path.insert(0, '..\interface_kivy')
 
 from Roles import *
-from User_Verification import *
+from Users import *
 import argparse
 
 
@@ -67,19 +67,26 @@ class Cli:
         """
 
         is_user_db = login_verify(arguments.pseudo, arguments.password)
-        if not is_user_db[0]:
+        if not is_user_db:
             print("Pseudo or password incorrect !")
         else:
-            print("Login ok")
+            print("Login Ok")
+            print(is_user_db)
 
     def register(self, arguments):
         """ Check if the user name and password exist in the DB
         :pre: args used in the command : pseudo, email, age, password, password, sec_question, sec_answer
         :post: display the result of the register ok or failed
         """
-        verification = register_verify(arguments.pseudo, arguments.email, arguments.age, arguments.password,
+        try:
+            register_verify(arguments.pseudo, arguments.email, arguments.birthdate, arguments.password,
                                        arguments.password, arguments.sec_question, arguments.sec_answer)
-        print(verification[1])
+
+        except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
+               AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+            print(error)
+
+
 
     def users(self, arguments):
         pass
@@ -93,7 +100,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--action", help="login ou register or users ou roles or permissions.")
     parser.add_argument("-u", "--pseudo", help="Le pseudo de l'utilisateur.")
     parser.add_argument("-p", "--password", help="le mot de passe")
-    parser.add_argument("-ag", "--age", help="the age", default="all")
+    parser.add_argument("-b", "--birthdate", help="the birthdate")
     parser.add_argument("-n", "--name", help="The name")
     parser.add_argument("-e", "--email", help="email address")
     parser.add_argument("-sq", "--sec_question", help="the second question")
