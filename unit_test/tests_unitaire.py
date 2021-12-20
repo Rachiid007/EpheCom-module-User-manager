@@ -4,16 +4,16 @@ class testUnitaire(unittest.TestCase):
 
     def test_is_valid_email(self):
         with self.assertRaises(EmailNotValid):
-            ValidationsInfosUsers.is_valide_email(int(3))
+            ValidationsInfosUsers.is_valid_email(int(3))
         with self.assertRaises(EmailNotValid):
-            ValidationsInfosUsers.is_valide_email("ggggg")
+            ValidationsInfosUsers.is_valid_email("ggggg")
         with self.assertRaises(EmailNotValid):
-            ValidationsInfosUsers.is_valide_email("gggg@.be")
+            ValidationsInfosUsers.is_valid_email("gggg@.be")
         with self.assertRaises(EmailNotValid):
-            ValidationsInfosUsers.is_valide_email("gggg@ee.b")
+            ValidationsInfosUsers.is_valid_email("gggg@ee.b")
             with self.assertRaises(EmailNotValid):
-            ValidationsInfosUsers.is_valide_email("gggg@e.be")
-        self.assertTrue(ValidationsInfosUsers.is_valide_email("aaaa@aaaa.aa"))
+            ValidationsInfosUsers.is_valid_email("gggg@e.be")
+        self.assertTrue(ValidationsInfosUsers.is_valid_email("aaaa@aaaa.aa"))
 
     def test_is_valid_password(self):
         with self.assertRaises(PasswordNotValid):
