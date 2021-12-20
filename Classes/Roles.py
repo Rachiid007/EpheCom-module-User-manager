@@ -1,5 +1,3 @@
-from Classes.Connection_to_DB import MongoConnector
-from Users import *
 import sys
 
 # adding Classes to the system path
@@ -7,6 +5,8 @@ sys.path.insert(0, '../Classes')
 # adding interface_kivy to the system path
 sys.path.insert(0, '../interface_kivy')
 
+from Connection_to_DB import MongoConnector
+from Users import *
 
 class AlreadyExistException(Exception):
     pass

@@ -4,8 +4,8 @@ sys.path.insert(0, '..\Classes')
 # adding interface_kivy to the system path
 sys.path.insert(0, '..\interface_kivy')
 
-from Classes.Roles import *
-from Classes.Users import *
+from Roles import *
+from Users import *
 import argparse
 
 
