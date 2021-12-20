@@ -70,7 +70,7 @@ class Connection(MDApp):
             register_verify(pseudo, email, birthday, password, password_confirm, sec_question, sec_answer)
 
         except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
-               AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
             snackbar_message(error)
 
         finally:
@@ -137,7 +137,7 @@ class Connection(MDApp):
                           confirm_password, security_question, security_answer)
 
         except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
-               AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
             snackbar_message(error)
 
     def delete_profile(self):
@@ -152,7 +152,7 @@ class Connection(MDApp):
             self.root.ids.display_all_user.add_widget(
                 ThreeLineListItem(text=user["pseudo"],
                                   secondary_text=f"      Firstname : "
-                                                 f"{user['first_name'] if not user['first_name'] == '' else 'Unknown'}, "
+                                                 f"{user['first_name'] if not user['first_name'] == '' else 'Unknown'},"
                                                  f"Lastname : "
                                                  f"{user['last_name'] if not user['last_name'] == '' else 'Unknown'}, "
                                                  f"age : {user['age']} year",
