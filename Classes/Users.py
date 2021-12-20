@@ -2,6 +2,7 @@ from Classes.Connection_to_DB import MongoConnector
 from datetime import date
 import re
 import hashlib
+from datetime import datetime
 import sys
 
 # adding Classes to the system path
@@ -11,8 +12,8 @@ sys.path.insert(0, '../Classes')
 class Users:
     """this Classes collects all information about a user"""
 
-    def __init__(self, pseudo: str, email: str, password: str, age: int = "", first_name: str = "", last_name: str = "",
-                 security_question: str = "", security_answer: str = ""):
+    def __init__(self, pseudo: str, email: str, password: str, age: str = "", first_name: str = "",
+                 last_name: str = "", security_question: str = "", security_answer: str = ""):
         """ This builds a User based on user name, email, password, age, first name, last name, security question,
                  security answer
         :pre: pseudo str, email str, password str, age int, first_name str, last_name str, security_question str,
@@ -140,20 +141,47 @@ class ValidationsInfosUsers:
         :pre: password str, confirmation_password str
         :post: return bool: True if the password is equal to the confirmation password otherwise False
         """
-
         if password != confirmation_password:
             raise PasswordsNotSame("Password and his confirmation don't match !")
 
         return True
 
     @staticmethod
-    def is_age_min_13_yeas(self, birthdate: str):
+    def convert_str_to_date(chaine: str) -> datetime:
+        """
+        :pre:
+        :post:
+        """
+        if not len(chaine) <= 7:
+            date_formate = datetime.strptime(chaine, '%Y-%m-%d')
+            return date_formate
+
+    @staticmethod
+    def calculate_age(birthdate: datetime) -> int:
+        """
+        :pre:
+        :post:
+        """
+        today = date.today()
+
+        # A bool that represents if today's day/month precedes the birth day/month
+        one_or_zero = ((today.month, today.day) < (birthdate.month, birthdate.day))
+
+        # Calculate the difference in years from the date object's components
+        year_difference = today.year - birthdate.year
+
+        age = year_difference - one_or_zero
+
+        return age
+
+    def is_age_min_13_years(self, birthdate: str):
         """ Check if the age os greater is greater than 13
         :pre: age int
         :post: return bool: True if the age is greater than 13 otherwise False
         """
         try:
-            age = self.calculate_age(birthdate)
+            date_ok = self.convert_str_to_date(birthdate)
+            age = self.calculate_age(date_ok)
 
         except ValueError:
             raise AgeNotValid("The string for the age is incorrect!")
@@ -218,7 +246,7 @@ class ValidationsInfosUsers:
     @staticmethod
     def is_valid_security_answer(security_answer: str):
         """ Check if the security answer is correct
-        :pre: password must be string
+        :pre: security_answer must be string
         :post: return str: The encrypted password
         """
         try:
@@ -242,20 +270,6 @@ class ValidationsInfosUsers:
         hash_object = hashlib.sha512(password)
         hex_dig = hash_object.hexdigest()
         return hex_dig
-
-    @staticmethod
-    def calculate_age(birthdate):
-        today = date.today()
-
-        # A bool that represents if today's day/month precedes the birth day/month
-        one_or_zero = ((today.month, today.day) < (birthdate.month, birthdate.day))
-
-        # Calculate the difference in years from the date object's components
-        year_difference = today.year - birthdate.year
-
-        age = year_difference - one_or_zero
-
-        return age
 
 
 class UsersOperations:
@@ -347,14 +361,22 @@ class UsersOperations:
         self.__collection.update_one(query, new_values)
 
     def delete_specific_user(self, pseudo):
+        """
+        :pre:
+        :post:
+        """
         query = {"pseudo": pseudo}
         self.__collection.delete_one(query)
 
     def delete_all_users(self):
+        """
+        :pre:
+        :post:
+        """
         self.__collection.delete_many({})
 
 
-def register_verify(pseudo: str, email: str, age: int, password: str, confimation_password: str,
+def register_verify(pseudo: str, email: str, age: str, password: str, confimation_password: str,
                     security_question: str, security_answer: str):
     """ Check if the register fields are valid
     :pre: pseudo str, email str, age int, password str, confimation_password str
@@ -366,7 +388,7 @@ def register_verify(pseudo: str, email: str, age: int, password: str, confimatio
         ValidationsInfosUsers().is_valid_password(password)
         ValidationsInfosUsers().is_valid_email(email)
         ValidationsInfosUsers().is_same_password(password, confimation_password)
-        ValidationsInfosUsers().is_age_min_13_yeas(age)
+        ValidationsInfosUsers().is_age_min_13_years(age)
         ValidationsInfosUsers().is_valid_security_question(security_question)
         ValidationsInfosUsers().is_valid_security_answer(security_answer)
         security_answer.lower()
@@ -404,8 +426,8 @@ def login_verify(pseudo, password):
 def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_first_name, new_last_name, new_password,
                   new_password_confim, new_security_question, new_security_answer):
     """
-    PRE
-    POST
+    :pre: current_pseudo str, current_password str,
+    :post:
     """
     try:
         user_infos = UsersOperations().get_infos_user(current_pseudo)
@@ -457,18 +479,18 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
 
 
 def delete_user(pseudo: str):
+    """ supprimer un utilisateur de la BDD
+    :pre:
+    :post:
     """
-       PRE
-       POST
-       """
     UsersOperations().delete_specific_user(pseudo)
 
 
 def recup_password(pseudo: str):
     """
-       PRE
-       POST
-       """
+    :pre:
+    :post:
+    """
     try:
         user_infos = UsersOperations().get_infos_user(pseudo)
 
@@ -478,18 +500,21 @@ def recup_password(pseudo: str):
         print(e)
 
 
-def check_if_correct_answers(pseudo: str, security_answer):
+def check_if_correct_answers(pseudo: str, security_answer: str, new_password: str, new_password_confim: str):
     """
-       PRE
-       POST
-       """
+    :pre: pseudo: str, security_answer: str, new_password: str, new_password_confim: str
+    :post:
+    """
     try:
         user_infos = UsersOperations().get_infos_user(pseudo)
 
-        if user_infos["security_answer"] == security_answer.lower():
-            return True
+        if not user_infos["security_answer"] == security_answer.lower():
+            raise SecurityAnswerNotCorrect("The answer is incorrect !")
 
-        raise SecurityAnswerNotCorrect("The answer is incorrect !")
+        ValidationsInfosUsers().is_valid_password(new_password)
+        ValidationsInfosUsers().is_same_password(new_password, new_password_confim)
+
+        return True
 
     except Exception as e:
         print(e)
@@ -497,10 +522,11 @@ def check_if_correct_answers(pseudo: str, security_answer):
 
 if __name__ == '__main__':
     # UsersOperations().delete_all_users()
-    print(register_verify("totototo", "toto@gmail.com", 36, "totototo", "totototo", "C qui ToTo ?",
+    print(register_verify("totototo", "toto@gmail.com", "1986-11-5", "totototo", "totototo", "C qui ToTo ?",
                           "c'est toto"))
 
-    print(register_verify("rachid007", "bellaalirachid@gmail.com", 48, "abdel1234", "abdel1234", "C quoi Django ?",
+    print(register_verify("rachid007", "bellaalirachid@gmail.com", "1979-11-5", "abdel1234", "abdel1234",
+                          "C quoi Django ?",
                           "Framework"))
 
     print(update_verify(current_pseudo="Abdel1080", current_password="abdel1234", new_pseudo="rachid007",
