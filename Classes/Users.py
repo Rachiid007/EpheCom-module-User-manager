@@ -375,6 +375,14 @@ class UsersOperations:
         """
         self.__collection.delete_many({})
 
+    def update_password(self, pseudo, new_password):
+        query = {"pseudo": pseudo}
+
+        new_values = {"$set": {
+            "password": new_password
+        }}
+        self.__collection.update_one(query, new_values)
+
 
 def register_verify(pseudo: str, email: str, age: str, password: str, confimation_password: str,
                     security_question: str, security_answer: str):
@@ -514,6 +522,8 @@ def check_if_correct_answers(pseudo: str, security_answer: str, new_password: st
         ValidationsInfosUsers().is_valid_password(new_password)
         ValidationsInfosUsers().is_same_password(new_password, new_password_confim)
 
+        UsersOperations().update_password(pseudo, new_password)
+
         return True
 
     except Exception as e:
@@ -526,8 +536,7 @@ if __name__ == '__main__':
                           "c'est toto"))
 
     print(register_verify("rachid007", "bellaalirachid@gmail.com", "1979-11-5", "abdel1234", "abdel1234",
-                          "C quoi Django ?",
-                          "Framework"))
+                          "C quoi Django ?", "Framework"))
 
     print(update_verify(current_pseudo="Abdel1080", current_password="abdel1234", new_pseudo="rachid007",
                         new_email="bellaalirachid@gmail.com", new_first_name="Rachid", new_last_name="BELLAALI",
