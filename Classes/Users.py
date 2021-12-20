@@ -1,4 +1,4 @@
-from Connection_to_DB import MongoConnector
+from Classes.Connection_to_DB import MongoConnector
 from datetime import date
 import re
 import hashlib
@@ -489,7 +489,7 @@ def check_if_correct_answers(pseudo: str, security_answer):
         if user_infos["security_answer"] == security_answer.lower():
             return True
 
-        return False
+        raise SecurityAnswerNotCorrect("The answer is incorrect !")
 
     except Exception as e:
         print(e)

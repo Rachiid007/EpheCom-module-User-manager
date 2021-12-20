@@ -70,7 +70,7 @@ class Connection(MDApp):
             register_verify(pseudo, email, birthday, password, password_confirm, sec_question, sec_answer)
 
         except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
-                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+               AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
             snackbar_message(error)
 
         finally:
@@ -137,7 +137,7 @@ class Connection(MDApp):
                           confirm_password, security_question, security_answer)
 
         except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
-                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+               AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
             snackbar_message(error)
 
     def delete_profile(self):
@@ -152,9 +152,9 @@ class Connection(MDApp):
             self.root.ids.display_all_user.add_widget(
                 ThreeLineListItem(text=user["pseudo"],
                                   secondary_text=f"      Firstname : "
-                                                 f"{user['first_name'] if not user['first_name'] =='' else 'Unknown'}, "
+                                                 f"{user['first_name'] if not user['first_name'] == '' else 'Unknown'}, "
                                                  f"Lastname : "
-                                                 f"{user['last_name'] if not user['last_name'] =='' else 'Unknown'}, "
+                                                 f"{user['last_name'] if not user['last_name'] == '' else 'Unknown'}, "
                                                  f"age : {user['age']} year",
 
                                   tertiary_text=f"      Email : {user['email']}"
@@ -165,6 +165,29 @@ class Connection(MDApp):
         """Disconnect the user from the app"""
         self.root.current = "connection"
         print("Success login out")
+
+    def go_to_forgot_psw(self):
+        """Change the screen to the forgot psw one"""
+        pseudo = self.root.ids.l_pseudo.text
+        if pseudo == "":
+            return snackbar_message("The pseudo field must be filled !")
+        try:
+            self.root.ids.fp_question.text = recup_password(pseudo)
+            self.root.current = "forgot_psw"
+
+        except PseudoNotValid as error:
+            snackbar_message(error)
+
+    def forgot_psw(self):
+        """Manage the forgot password actions"""
+        answer = self.root.ids.fp_answer.text
+        password = self.root.ids.fp_new_psw.text
+        confirm_password = self.root.ids.fp_confirm_psw.text
+
+        if answer == '' or password == '' or confirm_password == '':
+            snackbar_message("All field must be completed")
+
+        #   Management
 
 
 Connection().run()

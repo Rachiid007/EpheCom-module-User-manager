@@ -59,13 +59,24 @@ ScreenManager:
                             normal_color:[140/255, 255/255, 255/255, 0.7]
                             color_active: [140/255, 255/255, 255/255, 0.7]
 
-                        MDRaisedButton:
-                            id: sign_up
-                            text: "[color=#00556a]Sign-Up[/color]"
-                            md_bg_color: [140/255, 255/255, 255/255, 0.5]
-                            size_hint_x: None
-                            pos_hint: {"center_x" : 0.5}
-                            on_press : app.login()
+                        MDRelativeLayout:
+                            orientation: "horizontal"
+
+                            MDRaisedButton:
+                                id: sign_up
+                                text: "[color=#00556a]Sign-Up[/color]"
+                                md_bg_color: [140/255, 255/255, 255/255, 0.5]
+                                size_hint_x: None
+                                pos_hint: {"center_x" : 0.25, "center_y": 0.5}
+                                on_press : app.login()
+
+                            MDRaisedButton:
+                                id: forgot_psw
+                                text: "[color=#00556a]Forgot password[/color]"
+                                md_bg_color: [140/255, 255/255, 255/255, 0.5]
+                                size_hint_x: None
+                                pos_hint: {"center_x" : 0.75, "center_y": 0.5}
+                                on_press : app.go_to_forgot_psw()
 
             MDBottomNavigationItem:
                 name: "register_screen"
@@ -190,6 +201,89 @@ ScreenManager:
                             on_press : app.register()
 
 
+    Screen
+        name: "forgot_psw"
+
+        MDRelativeLayout:
+            md_bg_color: [148/255,136/255,251/255, 1]
+            orientation: "vertical"
+
+            MDCard:
+                md_bg_color: [118/255,106/255,221/255, 1]
+                size_hint: None, None
+                size: 400, 600
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                spacing: 5
+                padding: 5
+                orientation: "vertical"
+                elevation: 15
+
+                MDLabel:
+                    id: fp_question
+                    text: "Something should have appeared here ! "
+                    font_size: 20
+                    color: [1,1,1,1]
+                    halign: "center"
+                    size_hint: 1 , None
+                    pos_hint: {"center_x" : 0.5, "center_y" : 0.5}
+
+                MDTextFieldRound:
+                    id: fp_answer
+                    hint_text: "security answer"
+                    icon_left: "account"
+                    size_hint_x: None
+                    width: 200
+                    font_size: 25
+                    pos_hint: {"center_x": 0.5}
+                    normal_color:[140/255, 255/255, 255/255, 0.7]
+                    color_active: [140/255, 255/255, 255/255, 0.7]
+
+                MDTextFieldRound:
+                    id: fp_new_psw
+                    hint_text: "new password"
+                    icon_left: "eye-off"
+                    password: True
+                    allow_copy: False
+                    color: [1,1,1,1]
+                    size_hint_x: None
+                    width: 200
+                    font_size: 25
+                    pos_hint: {"center_x": 0.5}
+                    normal_color:[140/255, 255/255, 255/255, 0.7]
+                    color_active: [140/255, 255/255, 255/255, 0.7]
+
+                MDTextFieldRound:
+                    id: fp_confirm_psw
+                    hint_text: "confirm password"
+                    icon_left: "eye-off"
+                    password: True
+                    allow_copy: False
+                    color: [1,1,1,1]
+                    size_hint_x: None
+                    width: 200
+                    font_size: 25
+                    pos_hint: {"center_x": 0.5}
+                    normal_color:[140/255, 255/255, 255/255, 0.7]
+                    color_active: [140/255, 255/255, 255/255, 0.7]
+
+                MDRelativeLayout:
+                    orientation: "horizontal"
+
+                    MDRaisedButton:
+                        id: sign_up
+                        text: "[color=#00556a]Cancel[/color]"
+                        md_bg_color: [140/255, 255/255, 255/255, 0.5]
+                        size_hint_x: None
+                        pos_hint: {"center_x" : 0.25, "center_y": 0.5}
+                        on_press : root.current = "connection"
+
+                    MDRaisedButton:
+                        id: forgot_psw
+                        text: "[color=#00556a]Send request[/color]"
+                        md_bg_color: [140/255, 255/255, 255/255, 0.5]
+                        size_hint_x: None
+                        pos_hint: {"center_x" : 0.75, "center_y": 0.5}
+                        on_press : app.forgot_psw()
 
     Screen:
         name: "profile"
