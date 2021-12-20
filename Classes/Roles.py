@@ -8,6 +8,7 @@ sys.path.insert(0, '../interface_kivy')
 from Connection_to_DB import MongoConnector
 from Users import *
 
+
 class AlreadyExistException(Exception):
     pass
 
