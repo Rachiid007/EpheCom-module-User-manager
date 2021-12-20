@@ -4,8 +4,8 @@ sys.path.insert(0, '..\Classes')
 # adding interface_kivy to the system path
 sys.path.insert(0, '..\interface_kivy')
 
-from Roles import *
-from Users import *
+from Classes.Roles import *
+from Classes.Users import *
 import argparse
 
 
@@ -46,7 +46,7 @@ class Cli:
 
         rolesdb = RolesDBManagement()
         if args.roles == "all":
-            for x in rolesdb.get_all_roles_fromdb():
+            for x in rolesdb.get_all_roles_from_db():
                 print(x)
         elif args.roles == "name":
             for x in rolesdb.get_roles_by_name(args.name):
@@ -56,9 +56,9 @@ class Cli:
                 print(x)
         elif args.roles == "add":
             role = Role(args.id_role, args.name, args.description, args.id_user, args.perm_list)
-            print(rolesdb.insert_role_indb(role))
+            print(rolesdb.insert_role_in_db(role))
         elif args.roles == "delete":
-            print(rolesdb.delete_role_fromdb(args.name, args.id_user))
+            print(rolesdb.delete_role_from_db(args.name, args.id_user))
 
     def login(self, arguments):
         """ Check if the user name and password exist in the DB
