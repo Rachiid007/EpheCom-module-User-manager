@@ -58,5 +58,16 @@ class Permissions:
         """
         query = {"name": self.__name}
         self.__collection.delete_one(query)
+        
+    def list_perm(self) -> list:
+        """
+        Find and return a list with all permissions
+        PRE:
+        POST: return a list with all permission's names
+        """
+        list_perm = []
+        tab = self.__collection.find()
+        for line in tab:
+            list_perm.append(line["name"])
+        return list_perm
 
-        # rajouter une check permissions (id p)
