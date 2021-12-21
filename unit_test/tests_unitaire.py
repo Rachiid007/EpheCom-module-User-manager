@@ -23,7 +23,7 @@ class testUnitaire(unittest.TestCase):
         self.assertTrue(ValidationsInfosUsers.is_valid_password("aaaA_aa.a+a@a22a"))
         self.assertTrue(ValidationsInfosUsers.is_valid_password("aaaaaaaaa"))
 
-        def test_update_verify(self):
+    def test_update_verify(self):
         with self.assertRaises(PseudoNotValid):
             update_verify("totototo","totototo","aa","","","","","","","")
         with self.assertRaises(PseudoNotValid):
