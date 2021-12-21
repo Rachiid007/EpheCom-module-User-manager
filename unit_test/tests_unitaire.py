@@ -11,7 +11,7 @@ class testUnitaire(unittest.TestCase):
             ValidationsInfosUsers.is_valid_email("gggg@.be")
         with self.assertRaises(EmailNotValid):
             ValidationsInfosUsers.is_valid_email("gggg@ee.b")
-            with self.assertRaises(EmailNotValid):
+        with self.assertRaises(EmailNotValid):
             ValidationsInfosUsers.is_valid_email("gggg@e.be")
         self.assertTrue(ValidationsInfosUsers.is_valid_email("aaaa@aaaa.aa"))
 
