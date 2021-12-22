@@ -314,7 +314,7 @@ class UsersOperations:
 
     def is_not_exist_pseudo(self, pseudo: str):
         """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
-        :return: True si le pseudo courant existe dans la BDD et sinon False.
+        :return: True si le pseudo n'existe pas dans la BDD et Exception s'il existe !
         """
         query = {"pseudo": pseudo}
         if self.__collection.count_documents(query):
