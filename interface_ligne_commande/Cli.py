@@ -1,15 +1,15 @@
 import sys
-# adding Classes to the system path
-sys.path.insert(0, '..\Classes')
 
-from Roles import *
-from Users import *
-from Permission import *
+# adding Classes to the system path
+sys.path.insert(0, '../Classes')
+
+from Classes.Roles import *
+from Classes.Users import *
+from Classes.Permission import *
 import argparse
 
 
 class Cli:
-
     """ Used to process CLI commands
     usage:
     get all roles
@@ -42,7 +42,8 @@ class Cli:
             for x in rolesdb.get_all_roles_from_db():
                 print(x)
         elif args.roles == "add":
-            role = Role(arguments.id_role, arguments.name, arguments.description, arguments.id_user, arguments.perm_list)
+            role = Role(arguments.id_role, arguments.name, arguments.description, arguments.id_user,
+                        arguments.perm_list)
             print(rolesdb.insert_role_in_db(role))
         elif args.roles == "delete":
             print(rolesdb.delete_role_from_db(arguments.name, arguments.id_user))
@@ -72,7 +73,7 @@ class Cli:
                             arguments.password, arguments.sec_question, arguments.sec_answer)
 
         except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
-               AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
             print(error)
 
     @staticmethod
@@ -83,8 +84,8 @@ class Cli:
         user_managt = UsersOperations()
         if args.users == "get_all":
             for x in user_managt.get_all_users():
-                #if not "achi" in x['pseudo']:
-                print(f"id user : {x['_id']} | Pseudo : {x['pseudo']} | email : {x['email']} "\
+                #   if not "achi" in x['pseudo']:
+                print(f"id user : {x['_id']} | Pseudo : {x['pseudo']} | email : {x['email']} " 
                       f"| First name : {x['first_name']} | Last name : {x['last_name']}")
         elif args.users == "delete":
             user_managt.delete_specific_user(arguments.pseudo)
