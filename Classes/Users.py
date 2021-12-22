@@ -440,7 +440,7 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
 
     user_infos = UsersOperations().get_infos_user(current_pseudo)
 
-    if new_pseudo != current_pseudo or new_pseudo != "":
+    if not new_pseudo == current_pseudo:
         """
         si c un nvx check si il est dispo et correspond à la norme
         """
@@ -449,7 +449,7 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
     else:
         new_pseudo = current_pseudo
 
-    if new_email != user_infos["email"] or new_email != "":
+    if not new_email == user_infos["email"]:
         """
         si c un nvx check si il est dispo et correspond à la norme
         """
@@ -458,17 +458,17 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
     else:
         new_email = user_infos["email"]
 
-    if new_first_name != "":
+    if not new_first_name == "":
         ValidationsInfosUsers().is_valid_name(new_first_name)
 
-    if new_last_name != "":
+    if not new_last_name == "":
         ValidationsInfosUsers().is_valid_name(new_last_name)
 
     current_password_encrypt = ValidationsInfosUsers().password_encryption(current_password)
     if not current_password_encrypt == user_infos["password"]:
-        return "current Password not correct !"
+        raise PasswordNotValid("current Password not correct !")
 
-    if new_password != "" or new_password_confim != "":
+    if not new_password == "" or not new_password_confim == "":
         ValidationsInfosUsers().is_valid_password(new_password)
         ValidationsInfosUsers().is_same_password(new_password, new_password_confim)
     else:
