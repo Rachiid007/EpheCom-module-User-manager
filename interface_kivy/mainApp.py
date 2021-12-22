@@ -3,7 +3,7 @@ from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.list import ThreeLineListItem
 from kivymd.uix.picker import MDDatePicker
-from Classes.Roles import *
+from Classes.Users import *
 
 
 def snackbar_message(text) -> None:
@@ -57,8 +57,8 @@ class Connection(MDApp):
         password_confirm = self.root.ids.r_password_confirm.text
         email = self.root.ids.r_email.text
         birthday = self.root.ids.r_age.text
-        sec_question = self.root.ids.r_security_question
-        sec_answer = self.root.ids.r_security_answer
+        sec_question = self.root.ids.r_security_question.text
+        sec_answer = self.root.ids.r_security_answer.text
 
         # Empty field
         if pseudo == "" or password == "" or password_confirm == "" or email == "" or sec_question == "" \
@@ -134,6 +134,8 @@ class Connection(MDApp):
         try:
             update_verify(current_pseudo, current_password, new_pseudo, email, first_name, last_name, password,
                           confirm_password, security_question, security_answer)
+            snackbar_message("Done !")
+            self.display_profile_data(UsersOperations().get_infos_user(new_pseudo))
 
         except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
                 AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect or NameNotValid as error:
@@ -154,7 +156,7 @@ class Connection(MDApp):
                                                  f"{user['first_name'] if not user['first_name'] == '' else 'Unknown'},"
                                                  f" Lastname : "
                                                  f"{user['last_name'] if not user['last_name'] == '' else 'Unknown'}, "
-                                                 f" age : {user['age']} year",
+                                                 f" birthday : {user['age']}",
 
                                   tertiary_text=f"      Email : {user['email']}"
                                   )
