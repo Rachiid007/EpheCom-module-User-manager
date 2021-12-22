@@ -10,8 +10,6 @@ class ArnaudTests(unittest.TestCase):
         with self.assertRaises(PseudoNotValid):
             ValidationsInfosUsers().is_valid_pseudo([12])
         with self.assertRaises(PseudoNotValid):
-            ValidationsInfosUsers().is_valid_pseudo(("aaaa", 1234))
-        with self.assertRaises(PseudoNotValid):
             ValidationsInfosUsers().is_valid_pseudo(
                 {"hello": "yo", "hell": "yo", "ello": "yo", "helo": "yo", "hllo": "yo"})
         self.assertTrue(ValidationsInfosUsers().is_valid_pseudo("ChaosArnhug"))
