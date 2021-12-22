@@ -136,7 +136,7 @@ if __name__ == "__main__":
     python Cli.py --action permission --permission get_all
 
     add a new permission
-    python Cli.py --action permission --permission add --name [permission name] --description [permission description]
+    python Cli.py --action permission --permission add --name [permission name] --description [description]
     
     delete a permission
     python Cli.py --action permission --permission delete --name [permission name]
