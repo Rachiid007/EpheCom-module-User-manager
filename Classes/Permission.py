@@ -1,4 +1,9 @@
-from Classes.Connection_to_DB import MongoConnector
+import sys
+
+# adding Classes to the system path
+sys.path.insert(0, '../Classes')
+
+from Connection_to_DB import MongoConnector
 
 
 class Permissions:
@@ -14,7 +19,7 @@ class Permissions:
         # To Update as said in the review
         try:
             with MongoConnector() as connector:
-                self.__collection = connector.db["Permissions"]
+                self.__collection = connector.db["permissions"]
 
         except Exception as error:
             print(error)
@@ -59,4 +64,14 @@ class Permissions:
         query = {"name": self.__name}
         self.__collection.delete_one(query)
 
-        # rajouter une check permissions (id p)
+    def list_perm(self) -> list:
+        """
+        Find and return a list with all permissions
+        PRE:
+        POST: return a list with all permission's names
+        """
+        list_perm = []
+        tab = self.__collection.find()
+        for line in tab:
+            list_perm.append(line["name"])
+        return list_perm
