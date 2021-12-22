@@ -18,23 +18,37 @@ import argparse
 
 class Cli:
     """ Used to process CLI commands
-    usage:
     get all roles
-    python Cli.py --action roles --roles get_all
+    python Cli.py --role get_all
 
     add a new role
-    python Cli.py --action roles --roles add --id_role [role id]  --name [role name] --description [role description]
+    python Cli.py --role add --name [role name] --description [role description]
         --id_user [user ID] --perm_list [permission list]
 
     delete a role
-    python Cli.py --action roles --roles delete --name [role name] --id_user [id user]
+    python Cli.py --role delete --name [role name] --id_user [id user]
+
+    delete a user
+    python Cli.py --user delete --pseudo [the pseudo of the user]
+
+    get all users
+    python Cli.py --user get_all
 
     login
-    python Cli.py --action login --pseudo [Pseudo] --password [password]
+    python Cli.py --user login --pseudo [Pseudo] --password [password]
 
     register:
-    python Cli.py --action register --pseudo [Pseudo] --password [Password] --birthdate [birthdate]
+    python Cli.py --user register --pseudo [Pseudo] --password [Password] --birthdate [birthdate]
             --email [Email address] --sec_question [Question] --sec_answer [Response]
+
+    get all permissions
+    python Cli.py --permission get_all
+
+    add a new permission
+    python Cli.py --permission add --name [permission name] --description [description]
+
+    delete a permission
+    python Cli.py --permission delete --name [permission name]
 
     """
 
