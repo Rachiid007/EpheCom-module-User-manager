@@ -52,7 +52,7 @@ class Permissions:
         PRE:
         POST: The Permissions is now in the database
         """
-        query = {{"name": self.__name, "description": self.__description}}
+        query = {"name": self.__name, "description": self.__description}
         self.__collection.insert_one(query)
 
     def remove_perm(self) -> None:
