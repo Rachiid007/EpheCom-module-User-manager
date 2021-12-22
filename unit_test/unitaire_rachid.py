@@ -1,45 +1,64 @@
 import unittest
 
-from interface_kivy import User_Verification as u_v
+from Classes.Users import *
 
 
 class RachidTest(unittest.TestCase):
 
-    def setUp(self) -> None:
-        self.user_test = u_v.UsersOperations()
+    def setUp(self):
+        self.Uop = UsersOperations()
+        self.viU = ValidationsInfosUsers()
 
     def test_is_exist_user_name(self):
-        self.assertEqual(self.user_test.is_exist_user_name(""), False, "'' -> n'existe pas dans la DB (vide)")
-        self.assertEqual(self.user_test.is_exist_user_name("rachid007"), True,
-                         "'rachid007' -> existe dans la DB")  # l'ajouter
-        self.assertEqual(self.user_test.is_exist_user_name("chaos"), False, " 'chaos' -> n'existe pas dans la DB")
+        self.assertEqual(self.Uop.is_not_exist_pseudo(""), False, "'' -> n'existe pas dans la DB (vide)")
+        self.assertEqual(self.Uop.is_not_exist_pseudo("rachid007"), True,
+                         "'rachid007' -> existe dans la DB")
+        self.assertEqual(self.Uop.is_not_exist_pseudo("chaos"), False, " 'chaos' -> n'existe pas dans la DB")
 
     def test_is_age_min_13_yeas(self):
-        self.assertEqual(u_v.is_age_min_13_yeas("")[0], False, "'' -> n'age pas bon (vide)")
-        self.assertEqual(u_v.is_age_min_13_yeas(12)[0], False, "'12' -> pas bon min 13 ans")
-        self.assertEqual(u_v.is_age_min_13_yeas(13)[0], True, "'13' -> age ok")
-        self.assertEqual(u_v.is_age_min_13_yeas(36)[0], True, "'36' -> age ok")
-        self.assertEqual(u_v.is_age_min_13_yeas(-7)[0], False, "'-7' -> age no ok")
+        with self.assertRaises(AgeNotValid):
+            # vide !
+            self.viU.is_age_min_13_years("")
+
+        with self.assertRaises(AgeNotValid):
+            # pas bon min 13 ans
+            self.viU.is_age_min_13_years("2009-11-5")
+
+        with self.assertRaises(AgeNotValid):
+            # ok
+            self.viU.is_age_min_13_years("2008-11-5")
+
+        with self.assertRaises(AgeNotValid):
+            # OK
+            self.viU.is_age_min_13_years("1986-11-5")
+
+        with self.assertRaises(AgeNotValid):
+            # no OK
+            self.viU.is_age_min_13_years("2025-11-5")
 
     def test_register_verify(self):
-        self.assertEqual(u_v.register_verify("", "", "", "", ""),
-                         (False, 'Un ou plusieur champ ne sont pas complété !'),
-                         "les champs sont vide")
+        with self.assertRaises(PseudoNotValid):
+            # les champs sont vide
+            register_verify("", "", "", "", "", "", "")
 
-        self.assertEqual(u_v.register_verify("rachid007", "bellaalirachid@gmail.com", 50, "abdel1234", "abdel1234"),
-                         (False, "Le nom d'utilisateur existe déjà !"), "l'utilisateur existe déjà")
+        with self.assertRaises(PseudoNotValid):
+            # l'utilisateur existe déjà
+            register_verify("totototo", "totototo@gmail.com", "50", "abdel1234", "abdel1234", "", "")
 
-        self.assertEqual(u_v.register_verify("userno007", "bellaalirachid@gmail.com", 42, "abdel1234", "abdel1234"),
-                         (False, "L'adresse email existe déjà !"), "l'email existe déjà")
+        with self.assertRaises(EmailNotValid):
+            # L'email existe déjà
+            register_verify("userno007", "totototo@gmail.com", "42", "abdel1234", "abdel1234", "", "")
 
-        self.assertEqual(u_v.register_verify("userno007", "hdbyhdb@glpx.com", 25, "aaa", "aaa"),
-                         (False, 'Le MDP ne respect pas la norme !'), "Le MDP ne respect pas la norme !")
+        with self.assertRaises(PasswordNotValid):
+            # Le MDP ne respect pas la norme
+            register_verify("userno007", "hdbyhdb@glpx.com", "25", "aaa", "aaa", "", "")
 
-        self.assertEqual(u_v.register_verify("userno007", "hdbyhdb@glpx.com", 23, "abdel123", "rachid123"),
-                         (False, 'Les 2 MDP ne correspondent pas !'), "Les 2 MDP sont pas identique !")
+        with self.assertRaises(PasswordNotValid):
+            # Les 2 MDP sont pas identique
+            register_verify("userno007", "hdbyhdb@glpx.com", "23", "abdel123", "rachid123", "", "")
 
-        self.assertEqual(u_v.register_verify("Abderrachid", "usertest@gmail.com", 25, "abdel1234", "abdel1234"),
-                         (True, "L'utilisateur a été créée"), "Tu t'es inscrit")
+        self.assertTrue(register_verify("Abderrachid", "usertest@gmail.com", "25", "abdel1234", "abdel1234", "", ""),
+                        "Tu t'es inscrit")
 
 
 if __name__ == '__main__':

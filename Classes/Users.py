@@ -9,7 +9,6 @@ from datetime import date
 import re
 import hashlib
 
-
 # adding Classes to the system path
 sys.path.insert(0, '../Classes')
 
@@ -160,6 +159,7 @@ class ValidationsInfosUsers:
         if not len(chaine) <= 7:
             date_formate = datetime.strptime(chaine, '%Y-%m-%d')
             return date_formate
+        raise AgeNotValid("La longeur pas correct !")
 
     @staticmethod
     def calculate_age(birthdate: datetime) -> int:
@@ -381,6 +381,10 @@ class UsersOperations:
         self.__collection.delete_many({})
 
     def update_password(self, pseudo, new_password):
+        """
+        :pre:
+        :post:
+        """
         query = {"pseudo": pseudo}
 
         new_values = {"$set": {
