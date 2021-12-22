@@ -205,7 +205,7 @@ class ValidationsInfosUsers:
         try:
             email_ok = str(email)
         except ValueError:
-            return EmailNotValid("Email must be a string !")
+            raise EmailNotValid("Email must be a string !")
 
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
@@ -258,12 +258,12 @@ class ValidationsInfosUsers:
             security_answer_ok = str(security_answer)
 
         except ValueError:
-            raise SecurityQuestionNotCorrect("The security answer must be a string !")
+            raise SecurityAnswerNotCorrect("The security answer must be a string !")
 
         if 5 <= len(security_answer_ok) <= 50:
             return True
 
-        raise SecurityQuestionNotCorrect("The security answer length must be between 5 and 50 characters !")
+        raise SecurityAnswerNotCorrect("The security answer length must be between 5 and 50 characters !")
 
     @staticmethod
     def password_encryption(password: str):
@@ -400,28 +400,24 @@ def register_verify(pseudo: str, email: str, age: str, password: str, confimatio
     :post: return bool: True if the fields are valid otherwise False
     """
 
-    try:
-        ValidationsInfosUsers().is_valid_pseudo(pseudo)
-        ValidationsInfosUsers().is_valid_password(password)
-        ValidationsInfosUsers().is_valid_email(email)
-        ValidationsInfosUsers().is_same_password(password, confimation_password)
-        ValidationsInfosUsers().is_age_min_13_years(age)
-        ValidationsInfosUsers().is_valid_security_question(security_question)
-        ValidationsInfosUsers().is_valid_security_answer(security_answer)
-        security_answer.lower()
+    ValidationsInfosUsers().is_valid_pseudo(pseudo)
+    ValidationsInfosUsers().is_valid_password(password)
+    ValidationsInfosUsers().is_valid_email(email)
+    ValidationsInfosUsers().is_same_password(password, confimation_password)
+    ValidationsInfosUsers().is_age_min_13_years(age)
+    ValidationsInfosUsers().is_valid_security_question(security_question)
+    ValidationsInfosUsers().is_valid_security_answer(security_answer)
+    security_answer.lower()
 
-        UsersOperations().is_not_exist_pseudo(pseudo)
-        UsersOperations().is_not_exist_email(email)
+    UsersOperations().is_not_exist_pseudo(pseudo)
+    UsersOperations().is_not_exist_email(email)
 
-        password_encrypt = ValidationsInfosUsers().password_encryption(password)
+    password_encrypt = ValidationsInfosUsers().password_encryption(password)
 
-        user = Users(pseudo=pseudo, email=email, password=password_encrypt, age=age,
-                     security_question=security_question, security_answer=security_answer)
-        user.create()
-        return True
-
-    except Exception as e:
-        print(e)
+    user = Users(pseudo=pseudo, email=email, password=password_encrypt, age=age,
+                 security_question=security_question, security_answer=security_answer)
+    user.create()
+    return True
 
 
 def login_verify(pseudo, password):
@@ -430,14 +426,9 @@ def login_verify(pseudo, password):
     :post: return bool: True if the user name and password exist in the DB otherwise False
     """
 
-    try:
-        password_encrypt = ValidationsInfosUsers().password_encryption(password)
-
-        user_info = UsersOperations().is_user_in_db(pseudo, password_encrypt)
-        return user_info
-
-    except Exception as e:
-        print(e)
+    password_encrypt = ValidationsInfosUsers().password_encryption(password)
+    user_info = UsersOperations().is_user_in_db(pseudo, password_encrypt)
+    return True, user_info
 
 
 def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_first_name, new_last_name, new_password,
@@ -446,53 +437,50 @@ def update_verify(current_pseudo, current_password, new_pseudo, new_email, new_f
     :pre: current_pseudo str, current_password str,
     :post:
     """
-    try:
-        user_infos = UsersOperations().get_infos_user(current_pseudo)
 
-        if new_pseudo != current_pseudo or new_pseudo != "":
-            """
-            si c un nvx check si il est dispo et correspond à la norme
-            """
-            ValidationsInfosUsers().is_valid_pseudo(new_pseudo)
-            UsersOperations().is_not_exist_pseudo(new_pseudo)
-        else:
-            new_pseudo = current_pseudo
+    user_infos = UsersOperations().get_infos_user(current_pseudo)
 
-        if new_email != user_infos["email"] or new_email != "":
-            """
-            si c un nvx check si il est dispo et correspond à la norme
-            """
-            ValidationsInfosUsers().is_valid_email(new_email)
-            UsersOperations().is_not_exist_email(new_email)
-        else:
-            new_email = user_infos["email"]
+    if new_pseudo != current_pseudo or new_pseudo != "":
+        """
+        si c un nvx check si il est dispo et correspond à la norme
+        """
+        ValidationsInfosUsers().is_valid_pseudo(new_pseudo)
+        UsersOperations().is_not_exist_pseudo(new_pseudo)
+    else:
+        new_pseudo = current_pseudo
 
-        if new_first_name != "":
-            ValidationsInfosUsers().is_valid_name(new_first_name)
+    if new_email != user_infos["email"] or new_email != "":
+        """
+        si c un nvx check si il est dispo et correspond à la norme
+        """
+        ValidationsInfosUsers().is_valid_email(new_email)
+        UsersOperations().is_not_exist_email(new_email)
+    else:
+        new_email = user_infos["email"]
 
-        if new_last_name != "":
-            ValidationsInfosUsers().is_valid_name(new_last_name)
+    if new_first_name != "":
+        ValidationsInfosUsers().is_valid_name(new_first_name)
 
-        current_password_encrypt = ValidationsInfosUsers().password_encryption(current_password)
-        if not current_password_encrypt == user_infos["password"]:
-            return "current Password not correct !"
+    if new_last_name != "":
+        ValidationsInfosUsers().is_valid_name(new_last_name)
 
-        if new_password != "" or new_password_confim != "":
-            ValidationsInfosUsers().is_valid_password(new_password)
-            ValidationsInfosUsers().is_same_password(new_password, new_password_confim)
-        else:
-            new_password = user_infos["password"]
+    current_password_encrypt = ValidationsInfosUsers().password_encryption(current_password)
+    if not current_password_encrypt == user_infos["password"]:
+        return "current Password not correct !"
 
-        ValidationsInfosUsers().is_valid_security_question(new_security_question)
-        ValidationsInfosUsers().is_valid_security_answer(new_security_answer)
-        new_security_answer.lower()
+    if new_password != "" or new_password_confim != "":
+        ValidationsInfosUsers().is_valid_password(new_password)
+        ValidationsInfosUsers().is_same_password(new_password, new_password_confim)
+    else:
+        new_password = user_infos["password"]
 
-        UsersOperations().update(current_pseudo, new_pseudo, new_email, new_first_name, new_last_name, new_password,
-                                 new_security_question, new_security_answer)
-        return True
+    ValidationsInfosUsers().is_valid_security_question(new_security_question)
+    ValidationsInfosUsers().is_valid_security_answer(new_security_answer)
+    new_security_answer.lower()
 
-    except Exception as e:
-        print(e)
+    UsersOperations().update(current_pseudo, new_pseudo, new_email, new_first_name, new_last_name, new_password,
+                             new_security_question, new_security_answer)
+    return True
 
 
 def delete_user(pseudo: str):
@@ -508,13 +496,9 @@ def recup_password(pseudo: str):
     :pre:
     :post:
     """
-    try:
-        user_infos = UsersOperations().get_infos_user(pseudo)
 
-        return user_infos["security_question"]
-
-    except Exception as e:
-        print(e)
+    user_infos = UsersOperations().get_infos_user(pseudo)
+    return user_infos["security_question"]
 
 
 def check_if_correct_answers(pseudo: str, security_answer: str, new_password: str, new_password_confim: str):
@@ -522,36 +506,19 @@ def check_if_correct_answers(pseudo: str, security_answer: str, new_password: st
     :pre: pseudo: str, security_answer: str, new_password: str, new_password_confim: str
     :post:
     """
-    try:
-        user_infos = UsersOperations().get_infos_user(pseudo)
+    user_infos = UsersOperations().get_infos_user(pseudo)
 
-        if not user_infos["security_answer"] == security_answer.lower():
-            raise SecurityAnswerNotCorrect("The answer is incorrect !")
+    if not user_infos["security_answer"] == security_answer.lower():
+        raise SecurityAnswerNotCorrect("The answer is incorrect !")
 
-        ValidationsInfosUsers().is_valid_password(new_password)
-        ValidationsInfosUsers().is_same_password(new_password, new_password_confim)
+    ValidationsInfosUsers().is_valid_password(new_password)
+    ValidationsInfosUsers().is_same_password(new_password, new_password_confim)
+    UsersOperations().update_password(pseudo, ValidationsInfosUsers().password_encryption(new_password))
 
-        UsersOperations().update_password(pseudo, new_password)
-
-        return True
-
-    except Exception as e:
-        print(e)
+    return True
 
 
 if __name__ == '__main__':
-    # UsersOperations().delete_all_users()
-    print(register_verify("totototo", "toto@gmail.com", "1986-11-5", "totototo", "totototo", "C qui ToTo ?",
-                          "c'est toto"))
-
-    print(register_verify("rachid007", "bellaalirachid@gmail.com", "1979-11-5", "abdel1234", "abdel1234",
-                          "C quoi Django ?", "Framework"))
-
-    print(update_verify(current_pseudo="Abdel1080", current_password="abdel1234", new_pseudo="rachid007",
-                        new_email="bellaalirachid@gmail.com", new_first_name="Rachid", new_last_name="BELLAALI",
-                        new_password="", new_password_confim="",
-                        new_security_question="C'est quoi mon meilleur langage de progra ?",
-                        new_security_answer="Python"))
 
     user_test = UsersOperations()
     print(user_test.get_all_users())

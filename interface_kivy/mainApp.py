@@ -3,10 +3,7 @@ from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.list import ThreeLineListItem
 from kivymd.uix.picker import MDDatePicker
-from kivy.core.window import Window
-from Classes.Users import *
-
-Window.fullscreen = 'auto'
+from Classes.Roles import *
 
 
 def snackbar_message(text) -> None:
@@ -32,6 +29,7 @@ class Connection(MDApp):
 
     def login(self):
         """Manage the login on the app"""
+
         pseudo = self.root.ids.l_pseudo.text
         password = self.root.ids.l_password.text
 
@@ -42,11 +40,12 @@ class Connection(MDApp):
         # Connection and login with the DB
         try:
             is_user_db = login_verify(pseudo, password)
-            self.root.current = "profile"
-            self.display_profile_data(is_user_db)
-            self.display_list_user()
+            if isinstance(is_user_db, tuple) and is_user_db[0]:
+                self.root.current = "profile"
+                self.display_profile_data(is_user_db[1])
+                self.display_list_user()
 
-        except PasswordOrUsernameNotCorrect or Exception as error:
+        except PasswordOrUsernameNotCorrect as error:
             snackbar_message(error)
             self.root.ids.l_pseudo.text = ""
             self.root.ids.l_password.text = ""
@@ -63,7 +62,7 @@ class Connection(MDApp):
 
         # Empty field
         if pseudo == "" or password == "" or password_confirm == "" or email == "" or sec_question == "" \
-                or sec_answer == "":
+                or sec_answer == "" or birthday == "birthday":
             return snackbar_message("All field must be completed !")
 
         try:
@@ -107,7 +106,6 @@ class Connection(MDApp):
             data_string += f"\n\n{keys} : {data[keys] if not data[keys] == '' else 'Unknown'}"
 
         # Display
-        a = ""
         self.root.ids.p_display_pseudo.text = data["pseudo"]
         self.root.ids.p_display_data.text = data_string
 
@@ -138,7 +136,7 @@ class Connection(MDApp):
                           confirm_password, security_question, security_answer)
 
         except PseudoNotValid or EmailNotValid or PasswordNotValid or PasswordsNotSame or \
-                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect as error:
+                AgeNotValid or SecurityQuestionNotCorrect or SecurityAnswerNotCorrect or NameNotValid as error:
             snackbar_message(error)
 
     def delete_profile(self):
@@ -190,8 +188,8 @@ class Connection(MDApp):
 
         try:
             check_if_correct_answers(self.root.ids.l_pseudo.text, answer, password, confirm_password)
-            snackbar_message("The modification is done! You can go back and log-in.")
-        except SecurityAnswerNotCorrect as error:
+            snackbar_message("Done !")
+        except SecurityAnswerNotCorrect or PseudoNotValid or PasswordNotValid or PasswordsNotSame as error:
             snackbar_message(error)
 
 
