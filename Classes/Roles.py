@@ -3,7 +3,6 @@ import sys
 # adding Classes to the system path
 sys.path.insert(0, '../Classes')
 
-from Connection_to_DB import MongoConnector
 from Users import *
 
 
