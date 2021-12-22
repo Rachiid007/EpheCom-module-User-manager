@@ -63,7 +63,6 @@ class Cli:
         user_managt = UsersOperations()
         if args.user == "get_all":
             for x in user_managt.get_all_users():
-                #   if not "achi" in x['pseudo']:
                 print(f"id user : {x['_id']} | Pseudo : {x['pseudo']} | email : {x['email']} " 
                       f"| First name : {x['first_name']} | Last name : {x['last_name']}")
         elif args.user == "delete":
