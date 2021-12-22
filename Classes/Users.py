@@ -1,9 +1,14 @@
-from Classes.Connection_to_DB import MongoConnector
+from datetime import datetime
+import sys
+
+# adding Classes to the system path
+sys.path.insert(0, '../Classes')
+
+from Connection_to_DB import MongoConnector
 from datetime import date
 import re
 import hashlib
-from datetime import datetime
-import sys
+
 
 # adding Classes to the system path
 sys.path.insert(0, '../Classes')

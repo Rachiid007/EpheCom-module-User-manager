@@ -37,15 +37,8 @@ class Role:
         : pre:
         : post: return str : textual representation of a role
         """
-        return f"""
-                ===========================
-                id Role : {self.__id_role} 
-                Name : {self.__name}  
-                Description : {self.__description} 
-                id_user : {self.__id_user}  
-                Permission list : {self.__perm_list} 
-                ===========================
-                """
+        return f"id Role : {self.__id_role} | Name : {self.__name} | Description : {self.__description} " \
+               f"| id_user : {self.__id_user} | Permission list : {self.__perm_list}"
 
     @property
     def id_role(self):
@@ -255,7 +248,7 @@ class RolesDBManagement:
 
     def delete_role_from_db(self, name, id_user):
         """ Delete a role from the DB
-        :pre: role Role: a role object
+        :pre: name str , id_user str
         :post: str the role deleted from the DB
         :raises:Exception in case of failure
         """
