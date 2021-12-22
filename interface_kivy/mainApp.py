@@ -3,8 +3,8 @@ from kivymd.app import MDApp
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.list import ThreeLineListItem
 from kivymd.uix.picker import MDDatePicker
-from Classes.Users import *
 from kivy.core.window import Window
+from Classes.Users import *
 
 Window.fullscreen = 'auto'
 
@@ -102,11 +102,12 @@ class Connection(MDApp):
         data_keys = data.keys()
         data_string = f""
         for keys in data_keys:
-            if keys == "_id" or keys == "password" or keys == "pseudo":
+            if keys == "_id" or keys == "password" or keys == "pseudo" or keys == "list_role":
                 continue
             data_string += f"\n\n{keys} : {data[keys] if not data[keys] == '' else 'Unknown'}"
 
         # Display
+        a = ""
         self.root.ids.p_display_pseudo.text = data["pseudo"]
         self.root.ids.p_display_data.text = data_string
 
@@ -153,9 +154,9 @@ class Connection(MDApp):
                 ThreeLineListItem(text=user["pseudo"],
                                   secondary_text=f"      Firstname : "
                                                  f"{user['first_name'] if not user['first_name'] == '' else 'Unknown'},"
-                                                 f"Lastname : "
+                                                 f" Lastname : "
                                                  f"{user['last_name'] if not user['last_name'] == '' else 'Unknown'}, "
-                                                 f"age : {user['age']} year",
+                                                 f" age : {user['age']} year",
 
                                   tertiary_text=f"      Email : {user['email']}"
                                   )
@@ -187,7 +188,11 @@ class Connection(MDApp):
         if answer == '' or password == '' or confirm_password == '':
             snackbar_message("All field must be completed")
 
-        #   Management
+        try:
+            check_if_correct_answers(self.root.ids.l_pseudo.text, answer, password, confirm_password)
+            snackbar_message("The modification is done! You can go back and log-in.")
+        except SecurityAnswerNotCorrect as error:
+            snackbar_message(error)
 
 
 Connection().run()
