@@ -97,8 +97,8 @@ class Cli:
 
         permission_managt = Permissions()
         if args.permission == "get_all":
-            for x in permission_managt.get_all_permissions():
-                print(f"Name : {x['name']}| Description : {x['description']}")
+            for x in permission_managt.list_perm():
+                print(f"Name : {x}")
         elif args.permission == "add":
             obj_perm = Permissions(arguments.name, arguments.description)
             obj_perm.add_db_perm()
