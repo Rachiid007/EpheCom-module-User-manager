@@ -1,0 +1,38 @@
+Examples:
+cd .\interface_ligne_commande\
+
+Roles:
+    get all roles
+    python Cli.py --role get_all
+	
+    add a new role
+    python Cli.py --role add --name Administrateur --description "Role Administrateur" --id_user 61bb41df3aeef0ad6c9df93a --perm_list [3,5]
+	
+    delete a role
+    python Cli.py --role delete --name Administrateur --id_user 61bb41df3aeef0ad6c9df93a
+	
+	
+Permissions:
+	get all permissions
+	python Cli.py --permission get_all
+	
+	add a new permission 
+	python Cli.py --permission add --name "ajouter image" --description "cette permission permet d'ajouter une image"
+
+	delete a permission
+	python Cli.py --permission delete --name "ajouter image"
+
+	
+
+Users:
+    get all users
+	python Cli.py --user get_all
+	
+    add a new user ,inscription, register:
+    python Cli.py --user register --pseudo testest --password Test@123 --birthdate 1991-12-12 --email test@gmail.com --sec_question ttttttttt --sec_answer ttttttttt
+	
+    connexion, login
+    python Cli.py --user login --pseudo testest --password Test@123
+	
+	delete a user
+	python Cli.py --user delete --pseudo testest
