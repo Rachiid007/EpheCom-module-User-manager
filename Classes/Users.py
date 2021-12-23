@@ -316,6 +316,9 @@ class UsersOperations:
         """ Vérifiez si le nom d'utilisateur existe déjà dans la base de données.
         :return: True si le pseudo n'existe pas dans la BDD et Exception s'il existe !
         """
+        if pseudo == "":
+            raise PseudoNotValid("pseudo vide !")
+
         query = {"pseudo": pseudo}
         if self.__collection.count_documents(query):
             raise PseudoNotValid("Le nom d'utilisateur existe déjà !")
@@ -521,4 +524,5 @@ def check_if_correct_answers(pseudo: str, security_answer: str, new_password: st
 if __name__ == '__main__':
 
     user_test = UsersOperations()
-    print(user_test.get_all_users())
+    print(ValidationsInfosUsers().is_age_min_13_years(""))
+    # print(user_test.get_all_users())

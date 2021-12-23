@@ -52,7 +52,7 @@ class ArnaudTests(unittest.TestCase):
             ValidationsInfosUsers().is_valid_security_answer([12])
         with self.assertRaises(SecurityAnswerNotCorrect):
             ValidationsInfosUsers().is_valid_security_answer(
-                {"hello": "yo", "hell": "yo", "hello": "yo", "helo": "yo", "hllo": "yo"})
+                {"hello": "yo", "hell": "yo", "heo": "yo", "helo": "yo", "hllo": "yo"})
         self.assertTrue(ValidationsInfosUsers().is_valid_security_answer("Il est noir"))
 
         #   Length
