@@ -4,7 +4,7 @@ import sys
 # adding Classes to the system path
 sys.path.insert(0, '../Classes')
 
-from Connection_to_DB import MongoConnector
+from Classes.Connection_to_DB import MongoConnector
 from datetime import date
 import re
 import hashlib
@@ -522,7 +522,6 @@ def check_if_correct_answers(pseudo: str, security_answer: str, new_password: st
 
 
 if __name__ == '__main__':
-
     user_test = UsersOperations()
     # print(ValidationsInfosUsers().is_age_min_13_years(""))
     print(user_test.get_all_users())
