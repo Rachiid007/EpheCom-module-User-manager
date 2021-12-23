@@ -66,7 +66,7 @@ class RachidTest(unittest.TestCase):
             register_verify("userno007", "hdbyhdb@ephec.com", "1998-04-21", "abdel123", "rachid123", "c'est qui Toto",
                             "c'est Toto")
 
-        self.assertTrue(register_verify("rachiid007", "rachid@ephec.com", "1998-04-21", "abdel1234", "abdel1234",
+        self.assertTrue(register_verify("rachid007", "rachid@ephec.com", "1998-04-21", "abdel1234", "abdel1234",
                                         "C quoi mon meilleur langage de progra ?", "Python "), "Tu t'es inscrit")
 
 

@@ -524,5 +524,5 @@ def check_if_correct_answers(pseudo: str, security_answer: str, new_password: st
 if __name__ == '__main__':
 
     user_test = UsersOperations()
-    print(ValidationsInfosUsers().is_age_min_13_years(""))
-    # print(user_test.get_all_users())
+    # print(ValidationsInfosUsers().is_age_min_13_years(""))
+    print(user_test.get_all_users())

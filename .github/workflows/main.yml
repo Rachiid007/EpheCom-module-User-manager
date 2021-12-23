@@ -24,15 +24,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python 3.9
         uses: actions/setup-python@v1
         with:
           python-version: 3.7
       - name: Install Requirements
         run: |
+          CD $GITHUB_WORKPLACE
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest
-      - name: Run Pytest
+      - name: Run Tests
         run: |
             python -m unittest discover -s ./unit_test  -p 'tests_*.py'
