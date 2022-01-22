@@ -39,7 +39,7 @@ class RachidTest(unittest.TestCase):
         with self.assertRaises(AgeNotValid):
             # no OK
             self.viU.is_age_min_13_years("2025-11-5")
-#
+
 
 if __name__ == '__main__':
     unittest.main()
