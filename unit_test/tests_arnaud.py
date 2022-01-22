@@ -1,5 +1,5 @@
 import unittest
-from Classes.Users import *
+from unit_test.Users import *
 
 
 class ArnaudTests(unittest.TestCase):
