@@ -40,34 +40,6 @@ class RachidTest(unittest.TestCase):
             # no OK
             self.viU.is_age_min_13_years("2025-11-5")
 
-    def test_register_verify(self):
-        with self.assertRaises(PseudoNotValid):
-            # les champs sont vide
-            register_verify("", "", "", "", "", "", "")
-
-        with self.assertRaises(PseudoNotValid):
-            # l'utilisateur existe déjà
-            register_verify("totototo", "totototo@ephec.com", "2002-04-21", "abdel1234", "abdel1234",
-                            "C'est qui toto ?", "c'est toto")
-
-        with self.assertRaises(EmailNotValid):
-            # L'email existe déjà
-            register_verify("userno007", "toto@ephec.be", "1998-04-21", "abdel1234", "abdel1234", "c'est qui Toto",
-                            "c'est Toto")
-
-        with self.assertRaises(PasswordNotValid):
-            # Le MDP ne respect pas la norme
-            register_verify("userno007", "hdbyhdb@ephec.com", "1998-04-21", "aaa", "aaa", "c'est qui Toto",
-                            "c'est Toto")
-
-        with self.assertRaises(PasswordsNotSame):
-            # Les 2 MDP sont pas identique
-            register_verify("userno007", "hdbyhdb@ephec.com", "1998-04-21", "abdel123", "rachid123", "c'est qui Toto",
-                            "c'est Toto")
-
-        self.assertTrue(register_verify("rachid007", "rachid@ephec.com", "1998-04-21", "abdel1234", "abdel1234",
-                                        "C quoi mon meilleur langage de progra ?", "Python "), "Tu t'es inscrit")
-
 
 if __name__ == '__main__':
     unittest.main()
