@@ -1,7 +1,7 @@
 import sys
 
 # adding Classes to the system path
-sys.path.insert(0, '../Classes')
+# sys.path.insert(0, '../Classes')
 
 from Classes.Users import *
 
