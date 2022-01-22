@@ -3,7 +3,7 @@ import sys
 # adding Classes to the system path
 sys.path.insert(0, '../Classes')
 
-from unit_test.Users import *
+from Classes.Users import *
 
 
 class AlreadyExistException(Exception):
