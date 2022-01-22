@@ -2,12 +2,15 @@ from datetime import datetime
 import sys
 
 # adding Classes to the system path
-sys.path.insert(0, '')
+sys.path.insert(0, '../Classes')
 
 from Classes.Connection_to_DB import MongoConnector
 from datetime import date
 import re
 import hashlib
+
+# adding Classes to the system path
+sys.path.insert(0, '../Classes')
 
 
 class Users:
