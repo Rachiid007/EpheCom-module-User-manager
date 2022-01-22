@@ -1,6 +1,6 @@
 import unittest
 
-from context import *
+from Classes.Users import *
 
 
 class RachidTest(unittest.TestCase):
