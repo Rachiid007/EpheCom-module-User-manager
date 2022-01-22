@@ -8,21 +8,6 @@ class RachidTest(unittest.TestCase):
         self.Uop = UsersOperations()
         self.viU = ValidationsInfosUsers()
 
-    def test_is_not_exist_pseudo(self):
-        with self.assertRaises(PseudoNotValid):
-            # existe dans la DB
-            self.Uop.is_not_exist_pseudo("")
-
-        with self.assertRaises(PseudoNotValid):
-            # existe dans la DB
-            self.Uop.is_not_exist_pseudo("rachiid007")
-
-        with self.assertRaises(PseudoNotValid):
-            # existe dans la DB
-            self.Uop.is_not_exist_pseudo("totototo")
-
-        self.assertEqual(self.Uop.is_not_exist_pseudo("chaos"), True, " 'chaos' -> n'existe pas dans la DB")
-
     def test_is_age_min_13_yeas(self):
         with self.assertRaises(AgeNotValid):
             # vide !
