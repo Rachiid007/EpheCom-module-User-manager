@@ -9,9 +9,6 @@ from datetime import date
 import re
 import hashlib
 
-# adding Classes to the system path
-sys.path.insert(0, '')
-
 
 class Users:
     """this Classes collects all information about a user"""
