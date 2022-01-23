@@ -13,8 +13,8 @@ class MongoConnector:
         POST: Create a connection with the database through a certificate, a uri and a developer account
         """
 
-        indexroot = sys.path[0].split("/").index("Projet_Dev2")  # "../Classes/2TM1-G2.pem"
-        root = "/".join(sys.path[0].split("/")[:])
+        # indexroot = sys.path[-2].split("/").index("Projet_Dev2")  # "../Classes/2TM1-G2.pem"
+        root = "/".join(sys.path[-2].split("/")[:])
 
         certificate_path = os.path.join(root, "Classes/2TM1-G2.pem")
 
