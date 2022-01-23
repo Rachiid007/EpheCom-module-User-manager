@@ -3,10 +3,11 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import tests_rachid
-import tests_arnaud
-import tests_Roles
-import tests_unitaire
+from tests_rachid import *
+from tests_arnaud import *
+from tests_Roles import *
+from tests_unitaire import *
+
 
 import unittest
 
