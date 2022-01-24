@@ -15,7 +15,7 @@ class RachidTest(unittest.TestCase):
 
         with self.assertRaises(PseudoNotValid):
             # existe dans la DB
-            self.Uop.is_not_exist_pseudo("rachiid007")
+            self.Uop.is_not_exist_pseudo("rachiiiid007")
 
         with self.assertRaises(PseudoNotValid):
             # existe dans la DB
