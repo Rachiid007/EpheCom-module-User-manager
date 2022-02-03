@@ -6,7 +6,7 @@ class ArnaudTests(unittest.TestCase):
     def test_is_valid_pseudo(self):
         #   TYPE
         with self.assertRaises(PseudoNotValid):
-            ValidationsInfosUsers().is_valid_pseudo(1)
+            ValidationsInfosUsers().is_valid_pseudo(12345)
         with self.assertRaises(PseudoNotValid):
             ValidationsInfosUsers().is_valid_pseudo([12])
         with self.assertRaises(PseudoNotValid):
